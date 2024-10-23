@@ -1,0 +1,234 @@
+/* Main app theme */
+.app-theme {
+  background-color: #f7f9fc; /* Light background for a clean look */
+  font-family: 'Arial', sans-serif; /* Modern font for a fresh appearance */
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: #007bff; /* Vibrant blue color for the navbar */
+  color: rgb(153, 161, 185); /* White text for contrast */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+}
+
+.sort-cuisines-bar {
+  background-color: #4c66ad;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.navbar a {
+  color: white; /* White links for better visibility */
+  transition: color 0.3s ease; /* Smooth transition on hover */
+}
+
+.navbar a:hover {
+  color: #f7f9fc; /* Lighter color on hover */
+  text-decoration: underline; /* Underline effect for clarity */
+}
+
+/* Card styling */
+.card {
+  border-radius: 10px; /* Rounded corners for a modern look */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation for hover effect */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
+
+/* Button styling */
+.btn-outline-secondary {
+  border: 2px solid #6c757d; /* Solid border for definition */
+  color: #6c757d; /* Text color matching the border */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition on hover */
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d; /* Background color on hover */
+  color: white; /* White text on hover */
+}
+
+/* Rating styling */
+.rating {
+  font-size: 1.5rem; /* Larger font size for emphasis */
+  color: #ffc107; /* Gold color for rating stars */
+}
+
+/* Footer styling */
+footer {
+  background-color: #343a40; /* Dark background for footer */
+  color: white; /* White text for contrast */
+  padding: 20px; /* Padding for spacing */
+  text-align: center; /* Centered text for neatness */
+}
+
+footer a {
+  color: #adb5bd; /* Light grey for links */
+  transition: color 0.3s ease; /* Smooth transition on hover */
+}
+
+footer a:hover {
+  color: white; /* White on hover for visibility */
+  text-decoration: underline; /* Underline for clarity */
+}
+
+.app-theme-dark {
+  background-color: #04021e;
+  color: white;
+}
+
+.app-theme-light {
+  background-color: rgb(226, 228, 234);
+  color: black;
+}
+
+/* Add styles for navbar, buttons, etc. for dark mode */
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(207, 210, 222, 0.8);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover{
+  color: rgb(202, 205, 219);
+}
+
+.bg-dark {
+  background-color: #343a40 !important;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.card {
+  border: 1px solid #ddd;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rating span {
+  font-size: 1.2rem;
+}
+/* Main app theme */
+.app-theme {
+  background-color: #f7f9fc; /* Light background for a clean look */
+  font-family: 'Arial', sans-serif; /* Modern font for a fresh appearance */
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: #007bff; /* Vibrant blue color for the navbar */
+  color: rgb(153, 161, 185); /* White text for contrast */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+}
+
+.sort-cuisines-bar {
+  background-color: #4c66ad;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.navbar a {
+  color: white; /* White links for better visibility */
+  transition: color 0.3s ease; /* Smooth transition on hover */
+}
+
+.navbar a:hover {
+  color: #f7f9fc; /* Lighter color on hover */
+  text-decoration: underline; /* Underline effect for clarity */
+}
+
+/* Card styling */
+.card {
+  border-radius: 10px; /* Rounded corners for a modern look */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation for hover effect */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
+
+/* Button styling */
+.btn-outline-secondary {
+  border: 2px solid #6c757d; /* Solid border for definition */
+  color: #6c757d; /* Text color matching the border */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition on hover */
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d; /* Background color on hover */
+  color: white; /* White text on hover */
+}
+
+/* Rating styling */
+.rating {
+  font-size: 1.5rem; /* Larger font size for emphasis */
+  color: #ffc107; /* Gold color for rating stars */
+}
+
+/* Footer styling */
+footer {
+  background-color: #343a40; /* Dark background for footer */
+  color: white; /* White text for contrast */
+  padding: 20px; /* Padding for spacing */
+  text-align: center; /* Centered text for neatness */
+}
+
+footer a {
+  color: #adb5bd; /* Light grey for links */
+  transition: color 0.3s ease; /* Smooth transition on hover */
+}
+
+footer a:hover {
+  color: white; /* White on hover for visibility */
+  text-decoration: underline; /* Underline for clarity */
+}
+
+.app-theme-dark {
+  background-color: #04021e;
+  color: white;
+}
+
+.app-theme-light {
+  background-color: rgb(226, 228, 234);
+  color: black;
+}
+
+/* Add styles for navbar, buttons, etc. for dark mode */
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(207, 210, 222, 0.8);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover{
+  color: rgb(202, 205, 219);
+}
+
+.bg-dark {
+  background-color: #343a40 !important;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.card {
+  border: 1px solid #ddd;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rating span {
+  font-size: 1.2rem;
+}
