@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-icon {
+  background: none;
+  border: none;
+}
+
+:root {
+  --background: #c0cad3;
+  --foreground: #171717;
+  --card-background: #ffffff;
+  --card-foreground: #171717;
+  --button-background: #00356b;
+  --button-foreground: #ffffff;
+  --input-background: #ffffff;
+  --input-foreground: #171717;
+}
+
+.dark {
+  --background: #151414;
+  --foreground: #ededed;
+  --card-background: #1a1a1a;
+  --card-foreground: #ededed;
+  --button-background: #00356b;
+  --button-foreground: #ffffff;
+  --input-background: #2a2a2a;
+  --input-foreground: #ededed;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 70vh;
+}
+
+.restaurant-marker-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer utilities {
+  .text-shadow-white {
+    text-shadow: 0px 0px 12px rgba(255, 255, 255, 1), 0px 0px 4px rgba(255, 255, 255, 0.8);
+  }
+
+  .text-shadow-black {
+    text-shadow: 0px 0px 12px rgba(0, 0, 0, 1), 0px 0px 4px rgba(0, 0, 0, 0.8);
+  }
+}
+
