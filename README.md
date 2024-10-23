@@ -1,15 +1,15 @@
-# Food Finder
+# Spotify Wrapped
 
 ## Setup Django app
 
 1. Create a conda environment:
    ```
-   conda create -n food_finder python==3.10.12
+   conda create -n wrapped python==3.10.12
    ```
 
 2. Activate the environment:
    ```
-   conda activate food_finder
+   conda activate wrapped
    ```
 
 3. Install dependencies:
