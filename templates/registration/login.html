@@ -1,18 +1,191 @@
 <!-- templates/registration/login.html -->
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georgia Tech Wrapped - Login</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            background-color: #f7f7f7; /* Default light mode background */
+            color: #002D72; /* Default light mode text color */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            background-color: #FFD700; /* Default light mode container */
+            text-align: center; /* Centered text for a cohesive look */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        h1 {
+            font-size: 2.5rem; /* Larger font for the header */
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #002D72; /* Default light mode description color */
+            margin-bottom: 2rem;
+            font-size: 1.1rem; /* Standard font size */
+        }
+        form input[type="text"],
+        form input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border: 1px solid #002D72; /* Default light mode border */
+            outline: none;
+            transition: border-color 0.3s;
+            font-size: 1rem;
+        }
+        form input[type="text"]:focus,
+        form input[type="password"]:focus {
+            border-color: #FFD700; /* Gold border on focus */
+        }
+        form button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #002D72; /* Default light mode button */
+            color: #FFD700; /* Gold text */
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem; /* Standard font size */
+        }
+        form button:hover {
+            background-color: #003D80; /* Slightly darker navy on hover */
+        }
+        .signup-link {
+            color: #002D72; /* Navy blue for the signup link */
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+        }
+        .signup-link a {
+            color: #002D72; /* Navy blue for links */
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .signup-link a:hover {
+            color: #FFD700; /* Gold color on hover */
+        }
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #002D72; /* Navy blue for footer text */
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1E1E1E; /* Dark background */
+            color: #ffffff; /* Light text color */
+        }
+        .container.dark-mode {
+            background-color: #2A2A2A; /* Dark container background */
+        }
+        h1.dark-mode,
+        p.dark-mode,
+        .signup-link a.dark-mode,
+        .footer.dark-mode {
+            color: #ffffff; /* Light color for all text */
+        }
+        form input[type="text"].dark-mode,
+        form input[type="password"].dark-mode {
+            border: 1px solid #ffffff; /* Light border in dark mode */
+            background-color: #333333; /* Dark input background */
+            color: #ffffff; /* Light input text */
+        }
+        form button.dark-mode {
+            background-color: #2A2A2A; /* Dark button background */
+            color: #FFD700; /* Gold text */
+        }
+        form button.dark-mode:hover {
+            background-color: #444444; /* Slightly lighter on hover */
+        }
+
+        /* Toggle Button Positioning */
+        #toggle-mode {
+            position: absolute; /* Positioning in the corner */
+            top: 20px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            background-color: #FFD700; /* Gold toggle background */
+            color: #002D72; /* Navy text */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #toggle-mode:hover {
+            background-color: #FFC700; /* Slightly lighter on hover */
+        }
+        #toggle-mode.dark-mode {
+            background-color: #444444; /* Dark toggle background */
+            color: #FFD700; /* Gold text in dark mode */
+        }
+    </style>
 </head>
 <body>
-    <h2>Login</h2>
-    <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
+    <button id="toggle-mode" onclick="toggleMode()">Switch to Dark Mode</button> <!-- Toggle Button -->
 
-    <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+    <div class="container" id="login-container">
+        <!-- Login Box -->
+        <h1>Welcome to Georgia Tech Wrapped!</h1>
+        <p>Your Year, Your Data. Log in to explore your personalized insights!</p>
+
+        <!-- Login Form -->
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit">Log In</button>
+        </form>
+
+        <!-- Sign-Up Link -->
+        <p class="signup-link">
+            Don’t have an account? <a href="{% url 'signup' %}">Sign up here</a>
+        </p>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2024 Georgia Tech Wrapped. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMode() {
+            const body = document.body;
+            const container = document.getElementById('login-container');
+            const button = document.getElementById('toggle-mode');
+
+            body.classList.toggle('dark-mode');
+            container.classList.toggle('dark-mode');
+            const inputs = container.querySelectorAll('input');
+            inputs.forEach(input => input.classList.toggle('dark-mode'));
+            button.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                button.textContent = 'Switch to Light Mode';
+            } else {
+                button.textContent = 'Switch to Dark Mode';
+            }
+        }
+    </script>
 </body>
 </html>

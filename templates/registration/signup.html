@@ -1,18 +1,193 @@
 <!-- templates/registration/signup.html -->
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georgia Tech Wrapped - Sign Up</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            background-color: #ffffff; /* White background */
+            color: #333333; /* Dark text color */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .signup-box {
+            background-color: #FFD700; /* Gold color */
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        .signup-box h2 {
+            font-size: 2rem; /* Larger font for the header */
+            color: #333333; /* Dark text color */
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .signup-box p {
+            color: #555555; /* Slightly lighter text color for the description */
+            margin-bottom: 2rem;
+            font-size: 1rem; /* Standard font size */
+        }
+        .signup-box form input[type="text"],
+        .signup-box form input[type="password"],
+        .signup-box form input[type="email"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border: 1px solid #ccc; /* Light border */
+            outline: none;
+            transition: border-color 0.3s;
+            font-size: 1rem; /* Standard font size */
+        }
+        .signup-box form input[type="text"]:focus,
+        .signup-box form input[type="password"]:focus,
+        .signup-box form input[type="email"]:focus {
+            border-color: #FFD700; /* Gold border on focus */
+        }
+        .signup-box form button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #333333; /* Dark button */
+            color: #FFD700; /* Gold text */
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem; /* Standard font size */
+        }
+        .signup-box form button:hover {
+            background-color: #444444; /* Darker button on hover */
+        }
+        .login-link {
+            color: #333333; /* Dark text for the login link */
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+        }
+        .login-link a {
+            color: #333333; /* Keep the same color for links */
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .login-link a:hover {
+            color: #FFD700; /* Gold color on hover */
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1E1E1E; /* Dark background */
+            color: #ffffff; /* Light text color */
+        }
+        .signup-box.dark-mode {
+            background-color: #2A2A2A; /* Dark container background */
+        }
+        .signup-box h2.dark-mode,
+        .signup-box p.dark-mode,
+        .login-link a.dark-mode {
+            color: #ffffff; /* Light color for all text */
+        }
+        .signup-box form input[type="text"].dark-mode,
+        .signup-box form input[type="password"].dark-mode,
+        .signup-box form input[type="email"].dark-mode {
+            border: 1px solid #ffffff; /* Light border in dark mode */
+            background-color: #333333; /* Dark input background */
+            color: #ffffff; /* Light input text */
+        }
+        .signup-box form button.dark-mode {
+            background-color: #2A2A2A; /* Dark button background */
+            color: #FFD700; /* Gold text */
+        }
+        .signup-box form button.dark-mode:hover {
+            background-color: #444444; /* Slightly lighter on hover */
+        }
+
+        /* Toggle Button Positioning */
+        #toggle-mode {
+            position: absolute; /* Positioning in the corner */
+            top: 20px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            background-color: #FFD700; /* Gold toggle background */
+            color: #002D72; /* Navy text */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #toggle-mode:hover {
+            background-color: #FFC700; /* Slightly lighter on hover */
+        }
+        #toggle-mode.dark-mode {
+            background-color: #444444; /* Dark toggle background */
+            color: #FFD700; /* Gold text in dark mode */
+        }
+    </style>
 </head>
 <body>
-    <h2>Create an Account</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
-    </form>
+    <button id="toggle-mode" onclick="toggleMode()">Switch to Dark Mode</button> <!-- Toggle Button -->
 
-    <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+    <div class="container">
+        <!-- Signup Box -->
+        <div class="signup-box" id="signup-box">
+            <h2>Join Georgia Tech Wrapped</h2>
+            <p>Create your account to see your personalized wrap-up experience!</p>
+
+            <!-- Signup Form -->
+            <form method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <!-- Login Link -->
+            <p class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Log in here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMode() {
+            const body = document.body;
+            const signupBox = document.getElementById('signup-box');
+            const button = document.getElementById('toggle-mode');
+
+            body.classList.toggle('dark-mode');
+            signupBox.classList.toggle('dark-mode');
+            const inputs = signupBox.querySelectorAll('input');
+            inputs.forEach(input => input.classList.toggle('dark-mode'));
+            button.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                button.textContent = 'Switch to Light Mode';
+            } else {
+                button.textContent = 'Switch to Dark Mode';
+            }
+        }
+    </script>
 </body>
 </html>
