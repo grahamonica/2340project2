@@ -5,19 +5,18 @@
     <meta charset="UTF-8">
     <title>Spotify Wrapped - Home</title>
     <style>
-        /* General Styles */
+        /* Base styling for both modes */
         body {
-            background-color: #121212;
-            color: #FFFFFF;
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-
-        /* Header Styles */
+        
+        /* Header styles */
         .header {
             width: 100%;
             display: flex;
@@ -25,33 +24,31 @@
             align-items: center;
             padding: 1em;
             background-color: #282828;
-            box-shadow: 0 4px 2px -2px #1DB954;
+            box-shadow: 0 4px 2px -2px #FFD700;
             position: sticky;
             top: 0;
         }
 
         .header h1 {
-            color: #1DB954;
             font-size: 1.8em;
             margin: 0;
         }
 
         .header .nav-buttons a {
-            color: #FFFFFF;
             text-decoration: none;
-            background-color: #1DB954;
             padding: 0.5em 1em;
             margin-left: 10px;
             border-radius: 20px;
             font-size: 0.9em;
+            color: #FFFFFF;
             transition: background-color 0.3s;
         }
 
         .header .nav-buttons a:hover {
-            background-color: #1ed760;
+            background-color: #FFD700;
         }
 
-        /* Main Content Styles */
+        /* Main content styling */
         .content {
             max-width: 800px;
             width: 100%;
@@ -59,18 +56,9 @@
             box-sizing: border-box;
         }
 
-        .content h2 {
-            color: #1DB954;
-            border-bottom: 1px solid #1DB954;
-            padding-bottom: 0.5em;
-            margin-bottom: 1em;
-        }
-
         .post-spotify-button {
             display: block;
             text-align: center;
-            background-color: #1DB954;
-            color: #121212;
             padding: 1em;
             margin: 1em 0;
             border-radius: 5px;
@@ -79,39 +67,88 @@
             transition: background-color 0.3s;
         }
 
-        .post-spotify-button:hover {
-            background-color: #1ed760;
-        }
-
         .wrapped-post {
-            background-color: #282828;
-            border: 1px solid #1DB954;
             padding: 1.5em;
             margin: 1em 0;
             border-radius: 10px;
+            width: 80%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .wrapped-post h3 {
-            color: #1DB954;
-        }
-
-        .wrapped-post h4 {
-            color: #b3b3b3;
-            margin-top: 1em;
-        }
-
-        .top-list {
-            color: #b3b3b3;
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .top-list li {
+        .wrapped-post h3, .wrapped-post h4 {
             margin-bottom: 0.5em;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #1C1C1C;
+            color: #FFFFFF;
+        }
+        
+        body.dark-mode .header {
+            background-color: #333333;
+        }
+
+        body.dark-mode h1, body.dark-mode h2, .header h1 {
+            color: #FFD700;
+        }
+
+        body.dark-mode .post-spotify-button, body.dark-mode .nav-buttons a {
+            background-color: #FFD700;
+            color: #1C1C1C;
+        }
+
+        body.dark-mode .wrapped-post {
+            background-color: #2A2A2A;
+            border-left: 5px solid #FFD700;
+        }
+
+        body.dark-mode .top-list {
+            color: #FFF7AE;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+
+        body.light-mode .header {
+            background-color: #FFAA00;
+        }
+
+        body.light-mode h1, body.light-mode h2, .header h1 {
+            color: #FFAA00;
+        }
+
+        body.light-mode .post-spotify-button, body.light-mode .nav-buttons a {
+            background-color: #FFAA00;
+            color: #FFFFFF;
+        }
+
+        body.light-mode .wrapped-post {
+            background-color: #F9F9F9;
+            border-left: 5px solid #FFAA00;
+        }
+
+        body.light-mode .top-list {
+            color: #333333;
+        }
+
+        /* Toggle Button */
+        .toggle-button {
+            cursor: pointer;
+            margin-bottom: 1em;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: #FFAA00;
+            color: #FFFFFF;
         }
     </style>
 </head>
-<body>
+<body class="dark-mode">
     <!-- Header with Navigation Buttons -->
     <div class="header">
         <h1>Spotify Wrapped</h1>
@@ -120,6 +157,9 @@
             <a href="{% url 'logout' %}">Logout</a>
         </div>
     </div>
+
+    <!-- Light/Dark Mode Toggle Button -->
+    <button class="toggle-button" onclick="toggleMode()">Toggle Light/Dark Mode</button>
 
     <!-- Main Content -->
     <div class="content">
@@ -146,5 +186,26 @@
         <p>No public Spotify Wrapped posts yet.</p>
         {% endfor %}
     </div>
+
+    <script>
+        // Function to toggle light and dark modes
+        function toggleMode() {
+            const body = document.body;
+            const currentMode = body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+            const newMode = currentMode === 'dark-mode' ? 'light-mode' : 'dark-mode';
+            body.classList.remove(currentMode);
+            body.classList.add(newMode);
+            localStorage.setItem('theme', newMode);
+        }
+
+        // Load the user's preferred mode from localStorage
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.body.classList.remove('dark-mode', 'light-mode');
+                document.body.classList.add(savedTheme);
+            }
+        };
+    </script>
 </body>
 </html>
