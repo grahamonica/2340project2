@@ -5,35 +5,146 @@
     <meta charset="UTF-8">
     <title>Spotify Wrapped - Home</title>
     <style>
-        body { background-color: #121212; color: #FFFFFF; font-family: Arial, sans-serif; }
-        h1 { color: #1DB954; }
-        .wrapped-post { border: 1px solid #1DB954; padding: 1em; margin: 1em 0; border-radius: 5px; }
-        .top-list { color: #b3b3b3; }
+        /* General Styles */
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header Styles */
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+            background-color: #282828;
+            box-shadow: 0 4px 2px -2px #1DB954;
+            position: sticky;
+            top: 0;
+        }
+
+        .header h1 {
+            color: #1DB954;
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        .header .nav-buttons a {
+            color: #FFFFFF;
+            text-decoration: none;
+            background-color: #1DB954;
+            padding: 0.5em 1em;
+            margin-left: 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .header .nav-buttons a:hover {
+            background-color: #1ed760;
+        }
+
+        /* Main Content Styles */
+        .content {
+            max-width: 800px;
+            width: 100%;
+            padding: 2em;
+            box-sizing: border-box;
+        }
+
+        .content h2 {
+            color: #1DB954;
+            border-bottom: 1px solid #1DB954;
+            padding-bottom: 0.5em;
+            margin-bottom: 1em;
+        }
+
+        .post-spotify-button {
+            display: block;
+            text-align: center;
+            background-color: #1DB954;
+            color: #121212;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .post-spotify-button:hover {
+            background-color: #1ed760;
+        }
+
+        .wrapped-post {
+            background-color: #282828;
+            border: 1px solid #1DB954;
+            padding: 1.5em;
+            margin: 1em 0;
+            border-radius: 10px;
+        }
+
+        .wrapped-post h3 {
+            color: #1DB954;
+        }
+
+        .wrapped-post h4 {
+            color: #b3b3b3;
+            margin-top: 1em;
+        }
+
+        .top-list {
+            color: #b3b3b3;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .top-list li {
+            margin-bottom: 0.5em;
+        }
     </style>
 </head>
 <body>
-    <h1>Spotify Wrapped</h1>
-    <a href="{% url 'spotify_login' %}">Post Your Spotify Wrapped</a>
-
-    <h2>Public Spotify Wrapped Posts</h2>
-    {% for post in public_wrapped_posts %}
-    <div class="wrapped-post">
-        <h3>{{ post.user.username }}'s Spotify Wrapped</h3>
-        <h4>Top Tracks</h4>
-        <ul class="top-list">
-            {% for track in post.top_tracks %}
-            <li>{{ track.name }} - {{ track.artist }}</li>
-            {% endfor %}
-        </ul>
-        <h4>Top Artists</h4>
-        <ul class="top-list">
-            {% for artist in post.top_artists %}
-            <li>{{ artist.name }}</li>
-            {% endfor %}
-        </ul>
+    <!-- Header with Navigation Buttons -->
+    <div class="header">
+        <h1>Spotify Wrapped</h1>
+        <div class="nav-buttons">
+            <a href="{% url 'contact' %}">Contact the Developers</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
     </div>
-    {% empty %}
-    <p>No public Spotify Wrapped posts yet.</p>
-    {% endfor %}
+
+    <!-- Main Content -->
+    <div class="content">
+        <a href="{% url 'spotify_login' %}" class="post-spotify-button">Post Your Spotify Wrapped</a>
+
+        <h2>Public Spotify Wrapped Posts</h2>
+        {% for post in public_wrapped_posts %}
+        <div class="wrapped-post">
+            <h3>{{ post.user.username }}'s Spotify Wrapped</h3>
+            <h4>Top Tracks</h4>
+            <ul class="top-list">
+                {% for track in post.top_tracks %}
+                <li>{{ track.name }} - {{ track.artist }}</li>
+                {% endfor %}
+            </ul>
+            <h4>Top Artists</h4>
+            <ul class="top-list">
+                {% for artist in post.top_artists %}
+                <li>{{ artist.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% empty %}
+        <p>No public Spotify Wrapped posts yet.</p>
+        {% endfor %}
+    </div>
 </body>
 </html>

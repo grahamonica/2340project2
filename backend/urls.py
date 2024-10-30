@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.shortcuts import redirect
 from . import views
 from django.contrib.auth import views as auth_views  # <-- Add this line
 
@@ -26,7 +27,7 @@ urlpatterns = [
     path('thank-you/', views.thank_you, name='thank_you'),
     path('accounts/signup/', views.signup, name='signup'),  # Add this line for signup
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),  # Login page
-    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),  # Logout page
+    path('accounts/logout/', lambda request: redirect('login'), name='logout'),  # Redirect to login after logout
     path('spotify/login/', views.spotify_login, name='spotify_login'),  # Spotify login
     path('spotify/callback/', views.spotify_callback, name='spotify_callback'),  # Callback
 ]
