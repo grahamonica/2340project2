@@ -3,63 +3,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Wrapped - Home</title>
     <style>
-        /* General styling */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #FFFFFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            flex-direction: column;
-        }
-
-        /* Title styling */
-        h1 {
-            font-size: 3em;
-            font-weight: bold;
-            margin-bottom: 0.5em;
-            color: #1DB954; /* Spotify Green */
-        }
-
-        /* Description styling */
-        p {
-            font-size: 1.2em;
-            max-width: 600px;
-            line-height: 1.5em;
-            color: #b3b3b3; /* Light grey */
-            margin-bottom: 1em;
-        }
-
-        /* Button styling */
-        .btn {
-            background-color: #1DB954; /* Spotify Green */
-            color: #FFFFFF;
-            padding: 0.8em 1.5em;
-            font-size: 1em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #14833b; /* Darker green for hover effect */
-        }
+        body { background-color: #121212; color: #FFFFFF; font-family: Arial, sans-serif; }
+        h1 { color: #1DB954; }
+        .wrapped-post { border: 1px solid #1DB954; padding: 1em; margin: 1em 0; border-radius: 5px; }
+        .top-list { color: #b3b3b3; }
     </style>
 </head>
 <body>
     <h1>Spotify Wrapped</h1>
-    <p>Welcome to your personalized Spotify Wrapped experience! Dive into your favorite music moments and see what you've been listening to all year.</p>
-    
-    <!-- Link to Contact Page -->
-    <a href="{% url 'contact' %}" class="btn">Contact the Developers</a>
+    <a href="{% url 'spotify_login' %}">Post Your Spotify Wrapped</a>
+
+    <h2>Public Spotify Wrapped Posts</h2>
+    {% for post in public_wrapped_posts %}
+    <div class="wrapped-post">
+        <h3>{{ post.user.username }}'s Spotify Wrapped</h3>
+        <h4>Top Tracks</h4>
+        <ul class="top-list">
+            {% for track in post.top_tracks %}
+            <li>{{ track.name }} - {{ track.artist }}</li>
+            {% endfor %}
+        </ul>
+        <h4>Top Artists</h4>
+        <ul class="top-list">
+            {% for artist in post.top_artists %}
+            <li>{{ artist.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% empty %}
+    <p>No public Spotify Wrapped posts yet.</p>
+    {% endfor %}
 </body>
 </html>

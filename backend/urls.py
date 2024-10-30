@@ -17,10 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views  # <-- Add this line
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),  
     path('contact/', views.contact, name='contact'),
     path('thank-you/', views.thank_you, name='thank_you'),
+    path('accounts/signup/', views.signup, name='signup'),  # Add this line for signup
+    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),  # Login page
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),  # Logout page
+    path('spotify/login/', views.spotify_login, name='spotify_login'),  # Spotify login
+    path('spotify/callback/', views.spotify_callback, name='spotify_callback'),  # Callback
 ]
