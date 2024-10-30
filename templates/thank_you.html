@@ -1,10 +1,10 @@
-<!-- templates/home.html -->
+<!-- templates/thank_you.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Wrapped - Home</title>
+    <title>Thank You</title>
     <style>
         /* General styling */
         body {
@@ -22,19 +22,19 @@
 
         /* Title styling */
         h1 {
-            font-size: 3em;
+            font-size: 2.5em;
             font-weight: bold;
-            margin-bottom: 0.5em;
             color: #1DB954; /* Spotify Green */
+            margin-bottom: 0.5em;
         }
 
-        /* Description styling */
+        /* Message styling */
         p {
             font-size: 1.2em;
+            color: #b3b3b3; /* Light grey */
             max-width: 600px;
             line-height: 1.5em;
-            color: #b3b3b3; /* Light grey */
-            margin-bottom: 1em;
+            margin-bottom: 1.5em;
         }
 
         /* Button styling */
@@ -56,10 +56,10 @@
     </style>
 </head>
 <body>
-    <h1>Spotify Wrapped</h1>
-    <p>Welcome to your personalized Spotify Wrapped experience! Dive into your favorite music moments and see what you've been listening to all year.</p>
+    <h1>Thank You!</h1>
+    <p>Your message has been received. Our team will get back to you as soon as possible.</p>
     
-    <!-- Link to Contact Page -->
-    <a href="{% url 'contact' %}" class="btn">Contact the Developers</a>
+    <!-- Link back to the home page -->
+    <a href="{% url 'home' %}" class="btn">Return to Home</a>
 </body>
 </html>
