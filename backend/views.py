@@ -34,36 +34,51 @@ def signup(request):
 
     return render(request, "registration/signup.html", {"form": form})
 
-    
+
 def spotify_login(request):
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
 
 def spotify_callback(request):
+    # Get the authorization code from the callback URL
     code = request.GET.get('code')
-    token_info = sp_oauth.get_access_token(code)
+    
+    if code:
+        # Fetch the access token using the code
+        try:
+            token_info = sp_oauth.get_access_token(code)
+            access_token = token_info['access_token']
+            
+            # Initialize Spotify client with the access token
+            sp = spotipy.Spotify(auth=access_token)
 
-    if not token_info:
-        return render(request, 'error.html', {'message': 'Authentication failed.'})
+            # Fetch user's top tracks and artists
+            top_tracks = sp.current_user_top_tracks(limit=10)['items']
+            top_artists = sp.current_user_top_artists(limit=10)['items']
 
-    sp = spotipy.Spotify(auth=token_info['access_token'])
+            # Format data to store in the database
+            top_tracks_data = [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks]
+            top_artists_data = [{'name': artist['name']} for artist in top_artists]
 
-    # Fetch user's top tracks and artists
-    top_tracks = sp.current_user_top_tracks(limit=10)['items']
-    top_artists = sp.current_user_top_artists(limit=10)['items']
+            # Save data in the SpotifyWrapped model
+            SpotifyWrapped.objects.update_or_create(
+                user=request.user,
+                defaults={'top_tracks': top_tracks_data, 'top_artists': top_artists_data, 'is_public': True}
+            )
 
-    # Format data to store in JSONField
-    top_tracks_data = [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks]
-    top_artists_data = [{'name': artist['name']} for artist in top_artists]
+            # Redirect to the home page with a success message
+            messages.success(request, "Your Spotify Wrapped has been posted successfully!")
+            return redirect('home')
 
-    # Save data in the SpotifyWrapped model
-    wrapped, created = SpotifyWrapped.objects.update_or_create(
-        user=request.user,
-        defaults={'top_tracks': top_tracks_data, 'top_artists': top_artists_data, 'is_public': False}
-    )
-
-    # Redirect to home page
-    return redirect('home')
+        except Exception as e:
+            # Log the error and redirect to an error page or home
+            print("Error during Spotify callback:", e)
+            messages.error(request, "There was an issue connecting to Spotify.")
+            return redirect('home')
+    else:
+        # If no code is present in the callback URL, redirect to home with an error
+        messages.error(request, "No authorization code provided.")
+        return redirect('home')
 
 @login_required
 def home(request):
