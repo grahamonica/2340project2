@@ -82,6 +82,8 @@ def signup(request):
     return render(request, "registration/signup.html", {"form": form})
 
 
+def logout(request):
+    pass
 
 
 # Contact view for contacting developers

@@ -1,0 +1,16 @@
+db.sqlite3
+.cache
+
+# Common files to ignore
+*.pyc
+**/__pycache__/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.log
+.DS_Store
+.idea/
+.vscode/
+.env
