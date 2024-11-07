@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spotify Taste Quiz</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/theme.js' %}"></script>
+</head>
+<body class="dark-mode">
+    <div class="content">
+        <h1>Reorder Your Top 5 Spotify Songs</h1>
+        <p>Drag and drop the songs to match your actual Spotify Wrapped order.</p>
+
+        <ul id="song-list">
+            {% for track in tracks %}
+                <li class="song-item" data-name="{{ track.name }}">{{ track.name }} - {{ track.artist }}</li>
+            {% endfor %}
+        </ul>
+
+        <button id="submit-order" onclick="submitOrder()">Submit Order</button>
+
+        <p id="feedback-message"></p>
+    </div>
+
+    <!-- Confetti Script (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.min.js"></script>
+
+    <script>
+        // JavaScript for Drag and Drop functionality
+        let draggedItem = null;
+
+        document.querySelectorAll('.song-item').forEach(item => {
+            item.draggable = true;
+
+            item.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => this.style.display = 'none', 0);
+            });
+
+            item.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    draggedItem.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
+            });
+
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+
+            item.addEventListener('drop', function() {
+                if (draggedItem) {
+                    this.parentNode.insertBefore(draggedItem, this);
+                }
+            });
+        });
+
+        // Function to submit the order
+        function submitOrder() {
+            const trackOrder = Array.from(document.querySelectorAll('.song-item')).map(item => item.dataset.name);
+
+            fetch("{% url 'check_quiz_answer' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ track_order: trackOrder })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const feedbackMessage = document.getElementById("feedback-message");
+
+                if (data.status === "correct") {
+                    feedbackMessage.textContent = "Correct! 🎉";
+                    feedbackMessage.style.color = "green";
+                    // Trigger confetti if the answer is correct
+                    confetti();
+                } else {
+                    feedbackMessage.textContent = data.message;
+                    feedbackMessage.style.color = "red";
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        // Confetti function
+        function confetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+    </script>
+</body>
+</html>
