@@ -111,4 +111,4 @@ def thank_you(request):
 def custom_logout(request):
     logout(request)  # Logs out from Django
     request.session.pop('token_info', None)  # Clears Spotify token info if stored
-    return redirect("https://accounts.spotify.com/en/logout")  # Optionally redirect to Spotify logout page
+    return redirect("http://127.0.0.1:8000/accounts/login/?next=/")  # Optionally redirect to Spotify logout page
