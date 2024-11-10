@@ -10,6 +10,8 @@ from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 from .models import SpotifyWrapped
 from .forms import CustomUserCreationForm
+from django.contrib.auth import logout
+
 
 # Set up Spotify OAuth with the necessary scopes
 sp_oauth = SpotifyOAuth(
@@ -82,8 +84,12 @@ def signup(request):
     return render(request, "registration/signup.html", {"form": form})
 
 
-def logout(request):
-    pass
+from django.contrib.auth import logout as django_logout
+
+def custom_logout(request):
+    logout(request)  # Logs out from Django
+    request.session.pop('token_info', None)  # Clears Spotify token info if stored
+    return redirect("https://accounts.spotify.com/en/logout")  # Optionally redirect to Spotify logout page
 
 
 # Contact view for contacting developers

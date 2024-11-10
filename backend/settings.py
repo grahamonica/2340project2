@@ -23,6 +23,11 @@ SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
 SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
 SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
 
+# Ensure that Spotify credentials are set
+if not all([SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI]):
+    raise ValueError("Spotify credentials are not properly set in the .env file.")
+
+
 # URLs for redirect after login/logout
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
