@@ -1,8 +1,7 @@
 django
 charset_normalizer
-googlemaps
 djangorestframework
 python-dotenv
 django-cors-headers
-geopy
-shapely
+spotipy
+djangorestframework-simplejwt

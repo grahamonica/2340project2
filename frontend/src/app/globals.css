@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-black transition-colors dark:bg-[#1E1E1E] dark:text-white font-sans;
+  }
+}
+
+@layer components {
+  .login-box {
+    @apply max-w-[400px] w-full bg-white dark:bg-[#333333] p-8 rounded-xl 
+           shadow-lg text-center transition-colors;
+  }
+
+  .form-input {
+    @apply w-full px-3 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+           bg-white dark:bg-[#444444] text-black dark:text-white
+           focus:ring-2 focus:ring-yellow-400 focus:border-transparent
+           transition-colors text-base;
+  }
+
+  .btn-primary {
+    @apply w-full py-3 px-4 bg-[#FFD700] hover:bg-[#FFC700] 
+           text-[#333333] font-bold rounded-lg cursor-pointer
+           transition-colors duration-300 text-base;
+  }
+
+  .nav-link {
+    @apply px-4 py-2 rounded-full text-white 
+           hover:bg-yellow-400 hover:text-black transition-colors;
+  }
+
+  .wrapped-post {
+    @apply p-6 my-4 rounded-lg w-4/5 shadow-lg 
+           bg-white dark:bg-[#2A2A2A] 
+           border-l-4 border-[#FFD700];
+  }
+
+  .share-button {
+    @apply px-4 py-2 rounded-lg text-white font-bold text-sm 
+           transition-colors hover:opacity-90;
+  }
+}
