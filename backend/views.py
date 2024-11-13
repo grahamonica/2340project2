@@ -18,36 +18,50 @@ sp_oauth = SpotifyOAuth(
     client_id=settings.SPOTIPY_CLIENT_ID,
     client_secret=settings.SPOTIPY_CLIENT_SECRET,
     redirect_uri=settings.SPOTIPY_REDIRECT_URI,
-    scope="user-top-read"
+    scope="user-top-read",
+    cache_path=None  # This forces Spotify to ask for login every time
 )
 
 def spotify_login(request):
+    # Clear any existing token data
+    request.session.pop("token_info", None)
+
     # Redirect to Spotify's authorization page
     auth_url = sp_oauth.get_authorize_url()
+    print("Spotify Authorization URL:", auth_url)  # Debugging
     return redirect(auth_url)
 
+
 def spotify_callback(request):
-    # Retrieve the authorization code from the callback URL
     code = request.GET.get('code')
     
     if code:
         try:
-            # Get the access token using the code
+            # Get the access token
             token_info = sp_oauth.get_access_token(code)
             access_token = token_info['access_token']
-            
-            # Initialize Spotify client with the access token
             sp = Spotify(auth=access_token)
 
-            # Fetch user's top tracks and artists
-            top_tracks = sp.current_user_top_tracks(limit=5)['items']
-            top_artists = sp.current_user_top_artists(limit=5)['items']
+            # Fetch top tracks and artists
+            top_tracks_response = sp.current_user_top_tracks(limit=5)
+            top_artists_response = sp.current_user_top_artists(limit=5)
 
-            # Format the track and artist data for storage
+            # Debug: Print raw API responses
+            print("Raw Top Tracks Response:", top_tracks_response)
+            print("Raw Top Artists Response:", top_artists_response)
+
+            # Extract and format data
+            top_tracks = top_tracks_response.get('items', [])
+            top_artists = top_artists_response.get('items', [])
+
             top_tracks_data = [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks]
             top_artists_data = [{'name': artist['name']} for artist in top_artists]
 
-            # Save data in the SpotifyWrapped model associated with the logged-in user
+            # Debug: Log formatted data
+            print("Formatted Top Tracks:", top_tracks_data)
+            print("Formatted Top Artists:", top_artists_data)
+
+            # Save data to database
             SpotifyWrapped.objects.update_or_create(
                 user=request.user,
                 defaults={'top_tracks': top_tracks_data, 'top_artists': top_artists_data, 'is_public': True}
@@ -55,7 +69,6 @@ def spotify_callback(request):
 
             messages.success(request, "Your Spotify Wrapped has been posted successfully!")
             return redirect('home')
-
         except Exception as e:
             print("Error during Spotify callback:", e)
             messages.error(request, "There was an issue connecting to Spotify.")

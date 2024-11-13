@@ -1,61 +1,92 @@
-/* Base styling for both modes */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Center the entire login box */
+/* Base styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background-color: #1C1C1C; /* Dark background */
+    color: #FFFFFF;
+}
+/* Dark Mode Styling */
+body.dark-mode {
+    background-color: #003057; /* GT navy for background */
+    color: #B3A369; /* GT gold for text */
 }
 
-.login-container {
+/* Main content area */
+.content {
+    max-width: 800px;
+    width: 90%;
+    padding: 1rem 1rem; /* Minimal padding */
+    box-sizing: border-box;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    width: 100%;
-    padding: 20px;
 }
 
-/* Login Box Styling */
-.login-box {
-    background-color: #FFFFFF;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
+/* Ensure buttons are spaced and positioned correctly */
+.nav-buttons {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 1em; /* Add spacing between buttons */
+    margin-top: 2em; /* Add space above the buttons */
+    margin-bottom: 2em; /* Add space below the buttons */
 }
 
-/* Header and Subtitle Styling */
-.login-title {
-    font-size: 1.8em;
-    color: #FFD700;
+.nav-button {
+    text-decoration: none;
+    padding: 0.75em 1.5em;
+    border-radius: 5px;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #FFFFFF; /* White text for visibility */
+    background-color: #B3A369; /* GT gold */
+    transition: background-color 0.3s ease;
 }
 
-.login-subtitle {
-    color: #333333;
-    font-size: 1em;
-    margin-bottom: 1.5rem;
+.nav-button:hover {
+    background-color: #A3925A; /* Darker gold for hover effect */
 }
 
-/* Input and Button Styling */
+/* Post Spotify Wrapped Button */
+.post-spotify-button {
+    display: block;
+    text-align: center;
+    padding: 1em;
+    margin: 2em auto; /* Center horizontally and add space above/below */
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #FFFFFF; /* White text */
+    background-color: #B3A369; /* GT gold */
+    transition: background-color 0.3s ease;
+}
+
+.post-spotify-button:hover {
+    background-color: #A3925A; /* Darker gold for hover effect */
+}
+
+/* Wrapped posts */
+.wrapped-post {
+    padding: 1.5em;
+    margin: 2em 0;
+    border-radius: 10px;
+    background-color: #F4F4F4; /* Light gray for posts */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+body.dark-mode .wrapped-post {
+    background-color: #004C77; /* Darker navy for dark mode */
+    color: #B3A369; /* GT gold */
+    border-left: 5px solid #B3A369;
+}
+
+/* Input and button styling */
 form input[type="text"],
 form input[type="password"] {
     width: 100%;
@@ -69,8 +100,8 @@ form input[type="password"] {
 form button {
     width: 100%;
     padding: 0.75rem;
-    background-color: #FFD700;
-    color: #333333;
+    background-color: #B3A369; /* GT gold */
+    color: #003057; /* GT navy */
     font-weight: bold;
     border-radius: 8px;
     border: none;
@@ -80,42 +111,38 @@ form button {
 }
 
 form button:hover {
-    background-color: #FFC700;
+    background-color: #A3925A; /* Darker gold */
 }
 
-/* Signup Link Styling */
-.signup-link {
-    margin-top: 1rem;
-    color: #333333;
-    font-size: 0.9rem;
+/* Dark Mode Input and Button Styling */
+body.dark-mode form input[type="text"],
+body.dark-mode form input[type="password"] {
+    background-color: #004C77; /* Dark navy */
+    color: #B3A369; /* GT gold */
+    border: 1px solid #B3A369;
 }
 
-.signup-link a {
-    color: #FFD700;
-    text-decoration: none;
-    font-weight: bold;
+body.dark-mode form button {
+    background-color: #B3A369; /* GT gold */
+    color: #003057; /* GT navy */
 }
 
-.signup-link a:hover {
-    text-decoration: underline;
-}
-
-/* Footer Styling */
+/* Footer (optional) */
 .footer {
     margin-top: 2rem;
     font-size: 0.8rem;
     color: #888888;
 }
 
-/* Dark/Light Mode Toggle Button */
+/* Toggle Button */
 .toggle-mode-button {
     position: absolute;
     top: 20px;
     right: 20px;
     padding: 0.5rem 1rem;
     border-radius: 20px;
-    background-color: #FFD700;
-    color: #333333;
+    background-color: #B3A369; /* GT gold */
+    color: #003057; /* GT navy */
     font-weight: bold;
     border: none;
     cursor: pointer;
@@ -123,150 +150,7 @@ form button:hover {
 }
 
 .toggle-mode-button:hover {
-    background-color: #FFC700;
-}
-
-/* Dark Mode Styles */
-body.dark-mode {
-    background-color: #1E1E1E;
-    color: #FFFFFF;
-}
-
-.login-box.dark-mode {
-    background-color: #333333;
-    color: #FFFFFF;
-}
-
-form input[type="text"].dark-mode,
-form input[type="password"].dark-mode {
-    background-color: #444444;
-    color: #FFFFFF;
-    border: 1px solid #666666;
-}
-
-form button.dark-mode {
-    background-color: #666666;
-    color: #FFD700;
-}
-
-form button.dark-mode:hover {
-    background-color: #777777;
-}
-
-.toggle-mode-button.dark-mode {
-    background-color: #444444;
-    color: #FFD700;
-}
-
-/* Header styles */
-.header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1em;
-    background-color: #282828;
-    box-shadow: 0 4px 2px -2px #FFD700;
-    position: sticky;
-    top: 0;
-}
-
-.header h1 {
-    font-size: 1.8em;
-    margin: 0;
-}
-
-.header .nav-buttons a {
-    text-decoration: none;
-    padding: 0.5em 1em;
-    margin-left: 10px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    color: #FFFFFF;
-    transition: background-color 0.3s;
-}
-
-.header .nav-buttons a:hover {
-    background-color: #FFD700;
-}
-
-/* Main content styling */
-.content {
-    max-width: 800px;
-    width: 100%;
-    padding: 2em;
-    box-sizing: border-box;
-}
-
-.post-spotify-button {
-    display: block;
-    text-align: center;
-    padding: 1em;
-    margin: 1em 0;
-    border-radius: 5px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
-
-.wrapped-post {
-    padding: 1.5em;
-    margin: 1em 0;
-    border-radius: 10px;
-    width: 80%;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-.wrapped-post h3, .wrapped-post h4 {
-    margin-bottom: 0.5em;
-}
-
-/* Dark Mode */
-body.dark-mode {
-    background-color: #1C1C1C;
-    color: #FFFFFF;
-}
-
-body.dark-mode .header {
-    background-color: #333333;
-}
-
-body.dark-mode h1, body.dark-mode h2, .header h1 {
-    color: #FFD700;
-}
-
-body.dark-mode .post-spotify-button, body.dark-mode .nav-buttons a {
-    background-color: #FFD700;
-    color: #1C1C1C;
-}
-
-body.dark-mode .wrapped-post {
-    background-color: #2A2A2A;
-    border-left: 5px solid #FFD700;
-}
-
-/* Light Mode */
-body.light-mode {
-    background-color: #FFFFFF;
-    color: #000000;
-}
-
-body.light-mode .header {
-    background-color: #FFAA00;
-}
-
-body.light-mode h1, body.light-mode h2, .header h1 {
-    color: #FFAA00;
-}
-
-body.light-mode .post-spotify-button, body.light-mode .nav-buttons a {
-    background-color: #FFAA00;
-    color: #FFFFFF;
-}
-
-body.light-mode .wrapped-post {
-    background-color: #F9F9F9;
-    border-left: 5px solid #FFAA00;
+    background-color: #A3925A; /* Darker gold */
 }
 
 /* Share Buttons */
@@ -275,15 +159,18 @@ body.light-mode .wrapped-post {
     gap: 10px;
     margin-top: 10px;
 }
+
 .share-buttons a {
     text-decoration: none;
     padding: 0.5em 1em;
     border-radius: 5px;
-    color: #FFFFFF;
     font-size: 0.8em;
     font-weight: bold;
+    color: #FFFFFF;
+    background-color: #003057; /* GT navy */
     transition: background-color 0.3s;
 }
-.instagram-share { background-color: #C13584; }
-.linkedin-share { background-color: #0077B5; }
-.x-share { background-color: #1DA1F2; }
+
+.share-buttons a:hover {
+    background-color: #002840; /* Darker navy */
+}

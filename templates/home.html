@@ -7,20 +7,18 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body class="dark-mode">
-    <!-- Header with Navigation Buttons -->
-    <div class="header">
-        <h1>Spotify Wrapped</h1>
-        <div class="nav-buttons">
-            <a href="{% url 'contact' %}">Contact the Developers</a>
-            <a href="{% url 'logout' %}">Logout</a>
-        </div>
-    </div>
-
     <!-- Light/Dark Mode Toggle Button -->
     <button class="toggle-button" onclick="toggleMode()">Toggle Light/Dark Mode</button>
 
     <!-- Main Content -->
     <div class="content">
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
+            <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+        </div>
+
+        <!-- Post Spotify Wrapped Button -->
         <a href="{% url 'spotify_login' %}" class="post-spotify-button">Post Your Spotify Wrapped</a>
 
         <h2>Public Spotify Wrapped Posts</h2>
