@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Wrapped Slideshow</title>
+    
+    <!-- Load static files -->
+    {% load static %}
+    
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="{% static 'my_app/styles.css' %}">
+</head>
+<body>
+    <!-- Slideshow Container -->
+    <div class="slideshow-container">
+        <!-- Slide 1 -->
+        <div class="slide fade">
+            <div class="slide-content">
+                <h2>Top Track 1</h2>
+                <p>Artist: Artist Name</p>
+                <a href="https://open.spotify.com/track/track-id" target="_blank" class="listen-button">Listen</a>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide fade">
+            <div class="slide-content">
+                <h2>Top Track 2</h2>
+                <p>Artist: Artist Name</p>
+                <a href="https://open.spotify.com/track/track-id" target="_blank" class="listen-button">Listen</a>
+            </div>
+        </div>
+
+        <!-- Add more slides as needed -->
+
+    </div>
+
+    <!-- Link to the JavaScript file -->
+    <script src="{% static 'my_app/script.js' %}"></script>
+</body>
+</html>
