@@ -89,7 +89,8 @@ def spotify_callback(request):
         formatted_tracks = [
             {
                 'name': track['name'],
-                'artist': track['artists'][0]['name']
+                'artist': track['artists'][0]['name'],
+                'spotify_id': track['id']
             }
             for track in top_tracks['items']
         ]

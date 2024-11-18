@@ -29,7 +29,12 @@
             <h4>Top Tracks</h4>
             <ul class="top-list">
                 {% for track in post.top_tracks %}
-                <li>{{ track.name }} - {{ track.artist }}</li>
+                <li>{{ track.name }} - {{ track.artist }}
+                    {% if track.spotify_id %}
+                    <!-- Listen Button -->
+                    <a href="https://open.spotify.com/track/{{ track.spotify_id }}" class="listen-button" target="_blank">Listen</a>
+                    {% endif %}
+                </li>
                 {% endfor %}
             </ul>
             <h4>Top Artists</h4>

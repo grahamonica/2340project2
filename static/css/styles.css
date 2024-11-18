@@ -175,3 +175,21 @@ body.dark-mode form button {
 .share-buttons a:hover {
     background-color: #002840; /* Darker navy */
 }
+
+.listen-button {
+    color: white;               /* Text color */
+    background-color: transparent;  /* No background */
+    border: 1px solid white;    /* White border */
+    padding: 5px 10px;          /* Padding around the text */
+    text-decoration: none;      /* Remove underline */
+    display: inline-block;      /* Align the button inline */
+    margin-left: auto;          /* Align to the right */
+    margin-right: 0;            /* Remove any extra space on the right */
+}
+
+.top-list li {
+    display: flex;              /* Use flex to align items within the list */
+    justify-content: space-between;  /* Space out list items */
+    align-items: center;        /* Align items vertically */
+}
+
