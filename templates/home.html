@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spotify Presentation</title>
+    <title>Spotify Wrapped - Home</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body class="dark-mode">
@@ -12,19 +12,21 @@
 
     <!-- Main Content -->
     <div class="content">
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <a href="{% url 'spotify_social' %}" class="nav-button">View Spotify Social</a>
+            <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
+            <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+        </div>
+
+        <!-- Personalized Spotify Insights -->
         <h1>Welcome to Your Spotify Presentation</h1>
-        <p>Sign in to see your personalized Spotify insights!</p>
-
-        <!-- Spotify Login Button -->
-        <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
-
-        <!-- Display User's Spotify Taste -->
         {% if user_taste %}
         <div class="spotify-presentation">
             <h2>Your Top Tracks</h2>
             <ul class="top-list">
                 {% for track in user_taste.top_tracks %}
-                <li>{{ track.name }} by {{ track.artist }}</li>
+                <li>{{ track.name }} - {{ track.artist }}</li>
                 {% endfor %}
             </ul>
 
@@ -37,6 +39,7 @@
         </div>
         {% else %}
         <p>No Spotify data available. Please sign in to get started!</p>
+        <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
         {% endif %}
     </div>
 
