@@ -23,7 +23,8 @@ from django.contrib.auth import views as auth_views  # <-- Add this line
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+    path('', views.spotify_presentation, name='home'),  # New home page
+    path('spotify-social/', views.spotify_social, name='spotify_social'),  # Old home page renamed
     path('contact/', views.contact, name='contact'),
     path('thank-you/', views.thank_you, name='thank_you'),
     path('accounts/signup/', views.signup, name='signup'),

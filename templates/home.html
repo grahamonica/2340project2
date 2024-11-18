@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spotify Wrapped - Home</title>
+    <title>Spotify Presentation</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body class="dark-mode">
@@ -12,59 +12,32 @@
 
     <!-- Main Content -->
     <div class="content">
-        <!-- Navigation Buttons -->
-        <div class="nav-buttons">
-            <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
-            <a href="{% url 'logout' %}" class="nav-button">Logout</a>
-        </div>
+        <h1>Welcome to Your Spotify Presentation</h1>
+        <p>Sign in to see your personalized Spotify insights!</p>
 
-        <!-- Post Spotify Wrapped Button -->
-        <a href="{% url 'spotify_login' %}" class="post-spotify-button">Post Your Spotify Wrapped</a>
+        <!-- Spotify Login Button -->
+        <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
 
-        <h2>Public Spotify Wrapped Posts</h2>
-        {% for post in public_wrapped_posts %}
-        <div class="wrapped-post">
-            <h3>{{ post.user.username }}'s Spotify Wrapped</h3>
-            <h4>Top Tracks</h4>
-            {% if post.top_tracks == "No recently listened to tracks." %}
-            <p>No recently listened to tracks.</p>
-            {% else %}
+        <!-- Display User's Spotify Taste -->
+        {% if user_taste %}
+        <div class="spotify-presentation">
+            <h2>Your Top Tracks</h2>
             <ul class="top-list">
-                {% for track in post.top_tracks %}
-                <li>{{ track.name }} - {{ track.artist }}</li>
+                {% for track in user_taste.top_tracks %}
+                <li>{{ track.name }} by {{ track.artist }}</li>
                 {% endfor %}
             </ul>
-            {% endif %}
-            <h4>Top Artists</h4>
-            {% if post.top_artists == "No top artists found." %}
-            <p>No top artists found.</p>
-            {% else %}
+
+            <h2>Your Top Artists</h2>
             <ul class="top-list">
-                {% for artist in post.top_artists %}
+                {% for artist in user_taste.top_artists %}
                 <li>{{ artist.name }}</li>
                 {% endfor %}
             </ul>
-            {% endif %}
-
-            <!-- Sharing Buttons -->
-            <div class="share-buttons">
-                <a href="https://twitter.com/intent/tweet?text=Check out {{ post.user.username }}'s Spotify Wrapped! Top Tracks: {{ post.top_tracks|join:', ' }}; Top Artists: {{ post.top_artists|join:', ' }}" target="_blank" class="btn btn-twitter">
-                    Share on Twitter
-                </a>
-                <a href="https://www.instagram.com/" target="_blank" class="btn btn-instagram">
-                    Share on Instagram
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-facebook">
-                    Share on Facebook
-                </a>
-                <a href="https://discord.com/channels/@me" target="_blank" class="btn btn-discord">
-                    Share on Discord
-                </a>
-            </div>
         </div>
-        {% empty %}
-        <p>No public Spotify Wrapped posts yet.</p>
-        {% endfor %}
+        {% else %}
+        <p>No Spotify data available. Please sign in to get started!</p>
+        {% endif %}
     </div>
 
     <script src="{% static 'js/theme.js' %}"></script>
