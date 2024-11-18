@@ -154,26 +154,33 @@ body.dark-mode form button {
     background-color: #A3925A; /* Darker gold */
 }
 
-/* Share Buttons */
 .share-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
-.share-buttons a {
+.share-buttons .btn {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 10px 15px;
     text-decoration: none;
-    padding: 0.5em 1em;
+    color: white;
     border-radius: 5px;
-    font-size: 0.8em;
-    font-weight: bold;
-    color: #FFFFFF;
-    background-color: #003057; /* GT navy */
-    transition: background-color 0.3s;
 }
 
-.share-buttons a:hover {
-    background-color: #002840; /* Darker navy */
+.btn-twitter {
+    background-color: #1DA1F2;
+}
+
+.btn-instagram {
+    background-color: #E1306C;
+}
+
+.btn-facebook {
+    background-color: #4267B2;
+}
+
+.btn-discord {
+    background-color: #5865F2;
 }
 
 .listen-button {
