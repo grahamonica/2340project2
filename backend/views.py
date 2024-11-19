@@ -107,15 +107,11 @@ def spotify_login(request):
 @login_required
 def spotify_callback(request):
     """
-    Handles Spotify's OAuth callback and fetches the user's data.
+    Handles Spotify's OAuth callback and posts the home page slideshow presentation.
     """
     code = request.GET.get('code')
-    cache_path = request.session.get('cache_path')
-    
-    if not code:
-        messages.error(request, "Authorization code not found.")
-        return redirect('home')
-    
+    cache_path = request.session.get('cache_path', None)
+
     sp_oauth = SpotifyOAuth(
         client_id=settings.SPOTIPY_CLIENT_ID,
         client_secret=settings.SPOTIPY_CLIENT_SECRET,
@@ -123,52 +119,63 @@ def spotify_callback(request):
         scope="user-top-read user-read-private user-read-email",
         cache_path=cache_path
     )
-    
-    try:
-        # Get token info
-        token_info = sp_oauth.get_access_token(code)
-        if not token_info:
-            raise Exception("Failed to get access token")
-            
-        sp = Spotify(auth=token_info['access_token'])
-        
-        # Fetch user data
-        user_profile = sp.current_user()
-        print(f"User Profile: {user_profile}")
-        
-        # Fetch top tracks and artists
-        top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term').get('items', [])
-        top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term').get('items', [])
-        
-        # Format data
-        formatted_tracks = [
-            {'name': track['name'], 'artist': track['artists'][0]['name']}
-            for track in top_tracks
-        ] or "No recently listened to tracks."
-        
-        formatted_artists = [
-            {'name': artist['name']}
-            for artist in top_artists
-        ] or "No top artists found."
 
-        # Save data
+    try:
+        # Get access token
+        token_info = sp_oauth.get_access_token(code)
+        sp = Spotify(auth=token_info['access_token'])
+
+        # Fetch top tracks, artists, and genres
+        top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
+        top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
+        top_genres = {genre for artist in top_artists for genre in artist.get('genres', [])}
+
+        # Construct the slideshow HTML (reuse the home page format)
+        slideshow_html = f"""
+        <div class="slideshow-container">
+            <div class="slide">
+                <h2>Your Spotify Wrapped</h2>
+            </div>
+            <div class="slide">
+                <h3>Top Tracks:</h3>
+                <ul>
+                    {''.join(f'<li>{track["name"]} by {track["artists"][0]["name"]}</li>' for track in top_tracks)}
+                </ul>
+            </div>
+            <div class="slide">
+                <h3>Top Artists:</h3>
+                <ul>
+                    {''.join(f'<li>{artist["name"]}</li>' for artist in top_artists)}
+                </ul>
+            </div>
+            <div class="slide">
+                <h3>Top Genres:</h3>
+                <ul>
+                    {''.join(f'<li>{genre}</li>' for genre in top_genres)}
+                </ul>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="next" onclick="changeSlide(1)">&#10095;</button>
+        </div>
+        """
+
+        # Save the slideshow as the presentation
         SpotifyWrapped.objects.create(
             user=request.user,
-            top_tracks=formatted_tracks,
-            top_artists=formatted_artists,
+            presentation=slideshow_html,
             is_public=True
         )
-        
-        messages.success(request, "Your Spotify Wrapped has been posted successfully!")
+
+        messages.success(request, "Your Spotify Wrapped slideshow has been posted!")
     except Exception as e:
-        print(f"Error in spotify_callback: {e}")
-        messages.error(request, f"There was an error accessing your Spotify data: {str(e)}")
-    
-    # Clean up cache
-    if cache_path and os.path.exists(cache_path):
-        os.remove(cache_path)
-    
-    return redirect('home')
+        print(f"Error during Spotify callback: {e}")
+        messages.error(request, "Failed to post your Spotify Wrapped slideshow.")
+
+    # Redirect to Spotify Social page
+    return redirect('spotify_social')
+
 
 def signup(request):
     """

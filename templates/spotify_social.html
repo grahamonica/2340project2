@@ -31,31 +31,13 @@
         <!-- Post Spotify Wrapped Button -->
         <a href="{% url 'spotify_login' %}" class="post-spotify-button">Post Your Spotify Wrapped</a>
 
-        <h2>Public Spotify Wrapped Posts</h2>
+        <h2>Public Spotify Wrapped Presentations</h2>
         {% for post in public_wrapped_posts %}
         <div class="wrapped-post">
             <h3>{{ post.user.username }}'s Spotify Wrapped</h3>
-            <h4>Top Tracks</h4>
-            <ul class="top-list">
-                {% for track in post.top_tracks %}
-                <li>
-                    <span>{{ track.name }} - {{ track.artist }}</span>
-                    {% if track.preview_url %}
-                    <button class="speaker-icon" onclick="playSnippet('{{ track.preview_url }}', this)">
-                        🔊
-                    </button>
-                    {% else %}
-                    <span class="no-preview" title="No preview available" style="color: gray;">🔇</span>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-            <h4>Top Artists</h4>
-            <ul class="top-list">
-                {% for artist in post.top_artists %}
-                <li>{{ artist.name }}</li>
-                {% endfor %}
-            </ul>
+            <div class="presentation">
+                {{ post.presentation|safe }}
+            </div>
 
             <!-- Like Section -->
             <div class="like-section">
@@ -70,15 +52,12 @@
             </div>
         </div>
         {% empty %}
-        <p>No public Spotify Wrapped posts yet.</p>
+        <p>No public Spotify Wrapped presentations yet.</p>
         {% endfor %}
     </div>
 
-    <!-- Hidden Audio Player -->
-    <audio id="audio-player" style="display: none;"></audio>
-
     <!-- JavaScript -->
     <script src="{% static 'js/theme.js' %}"></script>
-    <script src="{% static 'js/social.js' %}"></script>
+    <script src="{% static 'js/slideshow.js' %}"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@ class SpotifyWrapped(models.Model):
     liked_by = models.ManyToManyField(User, related_name='liked_posts', blank=True)  # Track likes
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    presentation = models.TextField(null=True, blank=True)  # Store formatted presentation
 
     def __str__(self):
         return f"{self.user.username}'s Spotify Wrapped"
