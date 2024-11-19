@@ -10,6 +10,32 @@ from .models import SpotifyWrapped
 from .forms import CustomUserCreationForm
 from django.contrib.auth import logout as django_logout
 from spotipy import SpotifyException
+from django.shortcuts import get_object_or_404, redirect
+from django.http import JsonResponse
+
+@login_required
+def toggle_like(request, post_id):
+    """
+    Toggle the like status of a post for the current user.
+    """
+    post = get_object_or_404(SpotifyWrapped, id=post_id, is_public=True)
+    if request.user in post.liked_by.all():
+        post.liked_by.remove(request.user)
+        liked = False
+    else:
+        post.liked_by.add(request.user)
+        liked = True
+    return JsonResponse({'liked': liked, 'likes_count': post.liked_by.count()})
+
+
+@login_required
+def liked_posts(request):
+    """
+    Display posts liked by the current user.
+    """
+    posts = SpotifyWrapped.objects.filter(liked_by=request.user, is_public=True)
+    return render(request, 'spotify_social.html', {'public_wrapped_posts': posts, 'filter': 'liked'})
+
 
 @login_required
 def spotify_presentation(request):

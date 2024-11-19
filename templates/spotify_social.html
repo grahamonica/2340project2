@@ -17,6 +17,8 @@
             <a href="{% url 'home' %}" class="nav-button">Back to Home</a>
             <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
             <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            <a href="{% url 'liked_posts' %}" class="nav-button">Filter Liked Posts</a>
+            <a href="{% url 'spotify_social' %}" class="nav-button">Show All Posts</a>
         </div>
 
         <!-- Post Spotify Wrapped Button -->
@@ -27,40 +29,28 @@
         <div class="wrapped-post">
             <h3>{{ post.user.username }}'s Spotify Wrapped</h3>
             <h4>Top Tracks</h4>
-            {% if post.top_tracks == "No recently listened to tracks." %}
-            <p>No recently listened to tracks.</p>
-            {% else %}
             <ul class="top-list">
                 {% for track in post.top_tracks %}
                 <li>{{ track.name }} - {{ track.artist }}</li>
                 {% endfor %}
             </ul>
-            {% endif %}
             <h4>Top Artists</h4>
-            {% if post.top_artists == "No top artists found." %}
-            <p>No top artists found.</p>
-            {% else %}
             <ul class="top-list">
                 {% for artist in post.top_artists %}
                 <li>{{ artist.name }}</li>
                 {% endfor %}
             </ul>
-            {% endif %}
 
-            <!-- Sharing Buttons -->
-            <div class="share-buttons">
-                <a href="https://twitter.com/intent/tweet?text=Check out {{ post.user.username }}'s Spotify Wrapped! Top Tracks: {{ post.top_tracks|join:', ' }}; Top Artists: {{ post.top_artists|join:', ' }}" target="_blank" class="btn btn-twitter">
-                    Share on Twitter
-                </a>
-                <a href="https://www.instagram.com/" target="_blank" class="btn btn-instagram">
-                    Share on Instagram
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-facebook">
-                    Share on Facebook
-                </a>
-                <a href="https://discord.com/channels/@me" target="_blank" class="btn btn-discord">
-                    Share on Discord
-                </a>
+            <!-- Like Section -->
+            <div class="like-section">
+                <button class="like-button" onclick="toggleLike('{{ post.id }}')">
+                    {% if user in post.liked_by.all %}
+                    ❤️ Liked
+                    {% else %}
+                    🤍 Like
+                    {% endif %}
+                </button>
+                <span id="likes-count-{{ post.id }}">{{ post.liked_by.count }}</span> likes
             </div>
         </div>
         {% empty %}
@@ -68,6 +58,8 @@
         {% endfor %}
     </div>
 
+    <!-- JavaScript -->
     <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/social.js' %}"></script>
 </body>
 </html>
