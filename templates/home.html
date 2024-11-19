@@ -3,46 +3,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Wrapped - Home</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-mode">
-    <!-- Light/Dark Mode Toggle Button -->
-    <button class="toggle-button" onclick="toggleMode()">Toggle Light/Dark Mode</button>
+<body>
+    <!-- Header with Toggle Button -->
+    <div class="header">
+        <button class="toggle-button" onclick="toggleMode()">Toggle Light/Dark Mode</button>
+    </div>
 
     <!-- Main Content -->
     <div class="content">
         <!-- Navigation Buttons -->
         <div class="nav-buttons">
-            <a href="{% url 'spotify_social' %}" class="nav-button">View Spotify Social</a>
-            <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
+            <a href="{% url 'spotify_social' %}" class="nav-button">Spotify Social</a>
+            <a href="{% url 'contact' %}" class="nav-button">Contact Us</a>
             <a href="{% url 'logout' %}" class="nav-button">Logout</a>
         </div>
 
-        <!-- Personalized Spotify Insights -->
-        <h1>Welcome to Your Spotify Presentation</h1>
-        {% if user_taste %}
-        <div class="spotify-presentation">
-            <h2>Your Top Tracks</h2>
-            <ul class="top-list">
-                {% for track in user_taste.top_tracks %}
-                <li>{{ track.name }} - {{ track.artist }}</li>
-                {% endfor %}
-            </ul>
+        <!-- Slideshow Section -->
+        <div class="slideshow-container" id="slideshow-container">
+            <!-- Progress Bar -->
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
 
-            <h2>Your Top Artists</h2>
-            <ul class="top-list">
-                {% for artist in user_taste.top_artists %}
-                <li>{{ artist.name }}</li>
-                {% endfor %}
-            </ul>
+            <!-- Cover Slide -->
+            <div class="slide cover-slide">
+                <h2>Welcome to Your Spotify Wrapped</h2>
+            </div>
+
+            <!-- Transition Slide for Top Tracks -->
+            {% if user_taste %}
+                <div class="slide transition-slide">
+                    <h2>This year, your top tracks were...</h2>
+                    {% for track in user_taste.top_tracks %}
+                        {% if track.preview_url %}
+                            <!-- Audio Player for the Top Track -->
+                            <audio id="background-audio" autoplay loop>
+                                <source src="{{ track.preview_url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        {% endif %}
+                        <div class="slide">
+                            <h3 class="slide-title">Track: {{ track.name }}</h3>
+                            <p class="slide-content">By {{ track.artist }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Transition Slide for Top Artists -->
+                <div class="slide transition-slide">
+                    <h2>Now, let's take a look at your top artists!</h2>
+                    {% for artist in user_taste.top_artists %}
+                        <div class="slide">
+                            <h3 class="slide-title">Artist: {{ artist.name }}</h3>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Transition Slide for Top Genres -->
+                <div class="slide transition-slide">
+                    <h2>And here are your top genres!</h2>
+                    {% if user_taste.top_genres %}
+                        {% for genre in user_taste.top_genres %}
+                            <div class="slide">
+                                <h3 class="slide-title">Genre: {{ genre }}</h3>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="slide">
+                            <h3 class="slide-title">No top genres found</h3>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+            <div class="no-data">
+                <p>No Spotify data available. Please sign in to get started!</p>
+                <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
+            </div>
+            {% endif %}
         </div>
-        {% else %}
-        <p>No Spotify data available. Please sign in to get started!</p>
-        <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
-        {% endif %}
+
+        <!-- Rewatch Button -->
+        <button id="rewatch-button" style="display:none;" onclick="rewatchSlideshow()">Rewatch</button>
+
+        <!-- Navigation Controls (inside the slideshow container) -->
+        <div class="controls">
+            <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="next" onclick="changeSlide(1)">&#10095;</button>
+        </div>
     </div>
 
     <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/slideshow.js' %}"></script>
 </body>
 </html>
