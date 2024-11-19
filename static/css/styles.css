@@ -345,3 +345,19 @@ body.dark-mode form button {
     margin-left: auto;   /* Pushes the Next button to the right */
 }
 
+.speaker-icon {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.speaker-icon:hover {
+    color: #1db954; /* Spotify green */
+}
+
+.no-preview {
+    font-size: 1.2rem;
+    cursor: not-allowed;
+}

@@ -17,8 +17,15 @@
             <a href="{% url 'home' %}" class="nav-button">Back to Home</a>
             <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
             <a href="{% url 'logout' %}" class="nav-button">Logout</a>
-            <a href="{% url 'liked_posts' %}" class="nav-button">Filter Liked Posts</a>
-            <a href="{% url 'spotify_social' %}" class="nav-button">Show All Posts</a>
+            <a 
+                href="{% url 'liked_posts' %}?filter_liked={% if not filter_liked %}true{% else %}false{% endif %}" 
+                class="nav-button">
+                {% if filter_liked %}
+                Show All Posts
+                {% else %}
+                Filter Liked Posts
+                {% endif %}
+            </a>
         </div>
 
         <!-- Post Spotify Wrapped Button -->
@@ -31,7 +38,16 @@
             <h4>Top Tracks</h4>
             <ul class="top-list">
                 {% for track in post.top_tracks %}
-                <li>{{ track.name }} - {{ track.artist }}</li>
+                <li>
+                    <span>{{ track.name }} - {{ track.artist }}</span>
+                    {% if track.preview_url %}
+                    <button class="speaker-icon" onclick="playSnippet('{{ track.preview_url }}', this)">
+                        🔊
+                    </button>
+                    {% else %}
+                    <span class="no-preview" title="No preview available" style="color: gray;">🔇</span>
+                    {% endif %}
+                </li>
                 {% endfor %}
             </ul>
             <h4>Top Artists</h4>
@@ -57,6 +73,9 @@
         <p>No public Spotify Wrapped posts yet.</p>
         {% endfor %}
     </div>
+
+    <!-- Hidden Audio Player -->
+    <audio id="audio-player" style="display: none;"></audio>
 
     <!-- JavaScript -->
     <script src="{% static 'js/theme.js' %}"></script>

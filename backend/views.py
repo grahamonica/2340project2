@@ -31,11 +31,23 @@ def toggle_like(request, post_id):
 @login_required
 def liked_posts(request):
     """
-    Display posts liked by the current user.
+    Toggle between showing liked posts and all public posts.
     """
-    posts = SpotifyWrapped.objects.filter(liked_by=request.user, is_public=True)
-    return render(request, 'spotify_social.html', {'public_wrapped_posts': posts, 'filter': 'liked'})
+    filter_liked = request.GET.get('filter_liked', 'true').lower() == 'true'
 
+    if filter_liked:
+        posts = SpotifyWrapped.objects.filter(liked_by=request.user, is_public=True)
+    else:
+        posts = SpotifyWrapped.objects.filter(is_public=True)
+
+    return render(
+        request,
+        'spotify_social.html',
+        {
+            'public_wrapped_posts': posts,
+            'filter_liked': filter_liked,  # Pass the current filter status
+        },
+    )
 
 @login_required
 def spotify_presentation(request):

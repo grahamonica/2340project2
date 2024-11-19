@@ -32,3 +32,26 @@ function getCSRFToken() {
     }
     return null;
 }
+function playSnippet(previewUrl, element) {
+    const audioPlayer = document.getElementById('audio-player');
+
+    // Pause any currently playing audio
+    if (!audioPlayer.paused && audioPlayer.src === previewUrl) {
+        audioPlayer.pause();
+        element.textContent = '🔊'; // Reset icon to speaker
+        return;
+    }
+
+    // Set the preview URL as the audio source
+    audioPlayer.src = previewUrl;
+
+    // Play the audio
+    audioPlayer.play().catch((error) => {
+        console.error('Error playing audio snippet:', error);
+    });
+
+    // Change icon to indicate playback
+    const allIcons = document.querySelectorAll('.speaker-icon');
+    allIcons.forEach((icon) => (icon.textContent = '🔊')); // Reset all icons
+    element.textContent = '⏸'; // Change to pause icon
+}
