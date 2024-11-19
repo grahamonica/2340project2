@@ -6,9 +6,11 @@ let totalSlides;
 function showSlides() {
     const slides = document.querySelectorAll('.slide');
     const progressBar = document.getElementById('progress-bar');
-    const slideshowContainer = document.getElementById('slideshow-container');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
     const rewatchButton = document.getElementById('rewatch-button');
-
+    const logoutButtons = document.querySelectorAll('.nav-button');
+    
     // Hide all slides and reset the progress bar
     slides.forEach((slide, index) => {
         slide.style.display = (index === slideIndex) ? 'block' : 'none';
@@ -27,6 +29,19 @@ function showSlides() {
             progressBar.style.width = (currentWidth + 2) + '%';
         }
     }, 100);
+
+    // Show the buttons only on the last slide
+    if (slideIndex === totalSlides - 1) {
+        rewatchButton.style.display = 'block'; // Show rewatch button
+        logoutButtons.forEach(button => button.style.display = 'block'); // Show contact and logout buttons
+    } else {
+        rewatchButton.style.display = 'none'; // Hide rewatch button
+        logoutButtons.forEach(button => button.style.display = 'none'); // Hide contact and logout buttons
+    }
+
+    // Show/Hide navigation buttons
+    prevButton.style.display = (slideIndex === 0) ? 'none' : 'block'; // Hide "Previous" button on the first slide
+    nextButton.style.display = (slideIndex === totalSlides - 1) ? 'none' : 'block'; // Hide "Next" button on the last slide
 
     // Set a timeout to automatically move to the next slide after 5 seconds, unless it's the last slide
     if (slideIndex === totalSlides - 1) {

@@ -195,6 +195,153 @@ body.dark-mode form button {
 #progress-bar {
     height: 100%;
     width: 0%;
-    background-color: #4caf50;
+    background-color: #A3925A;
     transition: width 0.1s linear;
 }
+
+/* Slideshow Container */
+.slideshow-container {
+    position: relative;
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.slide {
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.fade {
+    opacity: 1;
+}
+
+/* Progress Bar */
+#progress-container {
+    width: 100%;
+    height: 10px;
+    background: #f0f0f0;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+#progress-bar {
+    height: 100%;
+    background: #A3925A;
+    width: 0%;
+    border-radius: 5px;
+}
+
+/* Buttons */
+.nav-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.nav-button, .action-button {
+    background-color: #A3925A;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover, .action-button:hover {
+    background-color: #A3925A;
+}
+
+.nav-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Fallback for No Data */
+.no-data {
+    text-align: center;
+    padding: 30px;
+}
+
+.no-data h3 {
+    font-size: 24px;
+    color: #333;
+}
+
+.no-data p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.spotify-login-button {
+    background-color: #A3925A;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.spotify-login-button:hover {
+    background-color: #A3925A;
+}
+
+/* Last Slide */
+.last-slide {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.last-slide .nav-button {
+    display: block;
+    margin: 10px auto;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .slideshow-container {
+        width: 90%;
+    }
+
+    .nav-buttons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .action-button {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* Navigation Buttons */
+.nav-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#prev-button {
+    margin-right: auto;  /* Pushes the Previous button to the left */
+}
+
+#next-button {
+    margin-left: auto;   /* Pushes the Next button to the right */
+}
+

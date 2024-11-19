@@ -60,6 +60,14 @@
                         {% endfor %}
                     </ul>
                 </div>
+                <!-- Last Slide with Buttons -->
+                <div class="slide last-slide">
+                    <h2>Thank you for checking your Spotify Wrapped!</h2>
+                    <!-- Display the buttons on the last slide -->
+                    <button id="rewatch-button" onclick="rewatchSlideshow()">Rewatch</button>
+                    <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
+                    <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+                </div>
             {% else %}
             <!-- Fallback for No Data -->
             <div class="no-data">
@@ -68,10 +76,9 @@
                 <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
             </div>
             {% endif %}
-        </div>
-
-        <!-- Rewatch Button -->
-        <button id="rewatch-button" onclick="rewatchSlideshow()" style="display: none;">Rewatch</button>
+            <!-- Navigation Buttons -->
+        <button class="nav-button" id="prev-button" onclick="changeSlide(-1)">Previous</button>
+        <button class="nav-button" id="next-button" onclick="changeSlide(1)">Next</button>
     </div>
 
     <!-- JavaScript -->
