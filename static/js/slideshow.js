@@ -28,17 +28,18 @@ function showSlides() {
         }
     }, 100);
 
-    // Set a timeout to automatically move to the next slide after 5 seconds
-    slideInterval = setTimeout(() => {
-        changeSlide(1);
-    }, 5000);
-
-    // Check if the slideshow has completed
+    // Set a timeout to automatically move to the next slide after 5 seconds, unless it's the last slide
     if (slideIndex === totalSlides - 1) {
+        // For the last slide, wait 5 seconds before showing the rewatch button
         setTimeout(() => {
             slideshowContainer.style.display = 'none';  // Hide the slideshow
             rewatchButton.style.display = 'block';     // Show the rewatch button
-        }, 500);  // Wait for the last slide to finish before hiding
+        }, 5000);  // Wait for the last slide to finish before hiding
+    } else {
+        // For all other slides, move to the next slide after 5 seconds
+        slideInterval = setTimeout(() => {
+            changeSlide(1);
+        }, 5000);
     }
 }
 

@@ -102,36 +102,22 @@ def spotify_callback(request):
         top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term').get('items', [])
         top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term').get('items', [])
         
-        # Fetch genres by checking each artist's details
-        top_genres = set()  # Using a set to avoid duplicates
-        for artist in top_artists:
-            artist_details = sp.artist(artist['id'])
-            top_genres.update(artist_details.get('genres', []))
-        
-        # Format data with preview_url for audio playback
+        # Format data
         formatted_tracks = [
-            {
-                'name': track['name'],
-                'artist': track['artists'][0]['name'],
-                'preview_url': track['preview_url'] if track.get('preview_url') else None  # Include preview_url for audio playback
-            }
+            {'name': track['name'], 'artist': track['artists'][0]['name']}
             for track in top_tracks
-        ] or None
-
+        ] or "No recently listened to tracks."
+        
         formatted_artists = [
             {'name': artist['name']}
             for artist in top_artists
         ] or "No top artists found."
-        
-        # Convert set of genres to list for easy storage
-        formatted_genres = list(top_genres) or "No top genres found."
-        
+
         # Save data
         SpotifyWrapped.objects.create(
             user=request.user,
             top_tracks=formatted_tracks,
             top_artists=formatted_artists,
-            top_genres=formatted_genres,  # Save top genres
             is_public=True
         )
         
@@ -145,8 +131,6 @@ def spotify_callback(request):
         os.remove(cache_path)
     
     return redirect('home')
-
-
 
 def signup(request):
     """
