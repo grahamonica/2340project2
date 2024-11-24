@@ -1,0 +1,273 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Wrapped - Home</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            text-align: center;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        /* Themes */
+        body.light-mode {
+            background-color: #f4f4f4;
+            color: #121212;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        body.christmas-mode {
+            background-color: #004d00;
+            color: #ffffff;
+            background-image: url('https://source.unsplash.com/1600x900/?christmas');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        body.halloween-mode {
+            background-color: #2e2a29;
+            color: #ff7518;
+            background-image: url('https://source.unsplash.com/1600x900/?halloween');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        /* Header Styling */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            z-index: 1000; /* Ensure header stays on top */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-buttons button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #1db954;
+            color: #ffffff;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+
+        .theme-buttons button:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #toggle-dark-light {
+            background-color: #1db954;
+        }
+
+        #toggle-christmas {
+            background-color: #ff0000;
+        }
+
+        #toggle-halloween {
+            background-color: #ff7518;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 40px; /* Adjusted for lower positioning */
+            padding-top: 20px;
+        }
+
+        .nav-button {
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #1db954;
+            padding: 12px 24px;
+            border-radius: 30px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-button:hover {
+            background-color: #14833b;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Slideshow Styling */
+        .slideshow-container {
+            margin-top: 100px; /* Adjust for the header */
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .slide {
+            display: none;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Slideshow Navigation Buttons */
+        #prev-button, #next-button {
+            padding: 12px 24px;
+            margin: 20px;
+            background-color: #1db954;
+            color: #ffffff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        #prev-button:hover, #next-button:hover {
+            background-color: #14833b;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="dark-mode">
+<!-- Fixed Header -->
+<div class="header">
+    <div class="theme-buttons">
+        <button id="toggle-dark-light">Light/Dark Mode</button>
+        <button id="toggle-christmas">Christmas Theme</button>
+        <button id="toggle-halloween">Halloween Theme</button>
+    </div>
+</div>
+
+
+<!-- Main Content -->
+<div class="content">
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <a href="{% url 'spotify_social' %}" class="nav-button">View Spotify Social</a>
+        <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
+        <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+    </div>
+
+    <!-- Slideshow Section -->
+    <div class="slideshow-container" id="slideshow-container">
+        <!-- Progress Bar -->
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <!-- Cover Slide -->
+        <div class="slide cover-slide">
+            <h2>Welcome to Your Spotify Wrapped</h2>
+        </div>
+
+        {% if user_taste %}
+            <!-- Transition Slide for Top Tracks -->
+            <div class="slide transition-slide">
+                <h2>This year, your top tracks were...</h2>
+            </div>
+
+            <div class="slide">
+                <h2>Your Top Tracks</h2>
+                <ul class="top-list">
+                    {% for track in user_taste.top_tracks %}
+                        <li>{{ track.name }} - {{ track.artist }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Transition Slide for Top Artists -->
+            <div class="slide transition-slide">
+                <h2>Now, let's take a look at your top artists!</h2>
+            </div>
+
+            <div class="slide">
+                <h2>Your Top Artists</h2>
+                <ul class="top-list">
+                    {% for artist in user_taste.top_artists %}
+                        <li>{{ artist.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- Last Slide with Buttons -->
+            <div class="slide last-slide">
+                <h2>Thank you for checking your Spotify Wrapped!</h2>
+                <!-- Display the buttons on the last slide -->
+                <button id="rewatch-button" onclick="rewatchSlideshow()">Rewatch</button>
+                <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            </div>
+        {% else %}
+            <!-- Fallback for No Data -->
+            <div class="no-data">
+                <h3>Oops! No Spotify data available.</h3>
+                <p>Sign in to get started with your Spotify Wrapped experience.</p>
+                <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
+            </div>
+        {% endif %}
+        <!-- Navigation Buttons -->
+        <button class="nav-button" id="prev-button" onclick="changeSlide(-1)">Previous</button>
+        <button class="nav-button" id="next-button" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Theme toggle logic
+        const body = document.body;
+        document.getElementById('toggle-dark-light').addEventListener('click', () => {
+            body.className = body.classList.contains('light-mode') ? 'dark-mode' : 'light-mode';
+        });
+
+        document.getElementById('toggle-christmas').addEventListener('click', () => {
+            body.className = 'christmas-mode';
+        });
+
+        document.getElementById('toggle-halloween').addEventListener('click', () => {
+            body.className = 'halloween-mode';
+        });
+    </script>
+    <script src="{% static 'js/slideshow.js' %}"></script>
+</body>
+</html>
