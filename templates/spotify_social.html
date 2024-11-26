@@ -5,31 +5,50 @@
     <meta charset="UTF-8">
     <title>Spotify Social</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
 </head>
+<style>
+    .content {
+        margin-top: 80px; /* Adjust based on the height of your header */
+        padding: 40px; /* Optional padding for better spacing */
+    }
+</style>
 <body class="dark-mode">
     <!-- Light/Dark Mode Toggle Button -->
-    <button class="toggle-button" onclick="toggleMode()">Toggle Light/Dark Mode</button>
+    <div class="header">
+        <div class="nav-links">
+            <a href="{% url 'spotify_social' %}" class="nav-link">Spotify Social</a>
+            <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+            <a href="{% url 'home' %}" class="nav-link">Back to Home</a>
+
+        </div>
+        <div class="dropdown">
+            <button class="dropdown-toggle">Select Theme</button>
+            <div class="dropdown-menu">
+                <button id="toggle-dark-light">Light/Dark Mode</button>
+                <button id="toggle-christmas">Christmas Theme</button>
+                <button id="toggle-halloween">Halloween Theme</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <div class="content">
-        <!-- Navigation Buttons -->
-        <div class="nav-buttons">
-            <a href="{% url 'home' %}" class="nav-button">Back to Home</a>
-            <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
-            <a href="{% url 'logout' %}" class="nav-button">Logout</a>
-            <a 
-                href="{% url 'liked_posts' %}?filter_liked={% if not filter_liked %}true{% else %}false{% endif %}" 
+
+        <a href="{% url 'spotify_login' %}" class="post-spotify-button">Post Your Spotify Wrapped</a>
+        <a
+                href="{% url 'liked_posts' %}?filter_liked={% if not filter_liked %}true{% else %}false{% endif %}"
                 class="nav-button">
-                {% if filter_liked %}
+            {% if filter_liked %}
                 Show All Posts
-                {% else %}
+            {% else %}
                 Filter Liked Posts
-                {% endif %}
-            </a>
-        </div>
+            {% endif %}
+        </a>
+
 
         <!-- Post Spotify Wrapped Button -->
-        <a href="{% url 'spotify_login' %}" class="post-spotify-button">Post Your Spotify Wrapped</a>
 
         <h2>Public Spotify Wrapped Presentations</h2>
         {% for post in public_wrapped_posts %}
@@ -57,6 +76,7 @@
     </div>
 
     <!-- JavaScript -->
+    <script src="{% static 'js/social.js' %}"></script>
     <script src="{% static 'js/theme.js' %}"></script>
     <script src="{% static 'js/slideshow.js' %}"></script>
 </body>

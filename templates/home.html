@@ -6,82 +6,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Wrapped - Home</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
 </head>
 <body class="dark-mode">
-    <!-- Light/Dark Mode Toggle Button -->
-    <button class="toggle-button" onclick="toggleMode()">Toggle Light/Dark Mode</button>
+<!-- Fixed Header -->
+<div class="header">
+    <div class="nav-links">
+        <a href="{% url 'spotify_social' %}" class="nav-link">Spotify Social</a>
+        <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+        <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+    </div>
+    <div class="dropdown">
+        <button class="dropdown-toggle">Select Theme</button>
+        <div class="dropdown-menu">
+            <button id="toggle-dark-light">Light/Dark Mode</button>
+            <button id="toggle-christmas">Christmas Theme</button>
+            <button id="toggle-halloween">Halloween Theme</button>
+        </div>
+    </div>
+</div>
 
-    <!-- Main Content -->
-    <div class="content">
-        <!-- Navigation Buttons -->
-        <div class="nav-buttons">
-            <a href="{% url 'spotify_social' %}" class="nav-button">View Spotify Social</a>
-            <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
-            <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+<!-- Main Content -->
+<div class="content">
+    <!-- Navigation Buttons -->
+
+    <!-- Slideshow Section -->
+    <div class="slideshow-container" id="slideshow-container">
+        <!-- Progress Bar -->
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
         </div>
 
-        <!-- Slideshow Section -->
-        <div class="slideshow-container" id="slideshow-container">
-            <!-- Progress Bar -->
-            <div id="progress-bar-container">
-                <div id="progress-bar"></div>
+        <!-- Cover Slide -->
+        <div class="slide cover-slide">
+            <h2>Welcome to Your Spotify Wrapped</h2>
+        </div>
+
+        {% if user_taste %}
+            <!-- Transition Slide for Top Tracks -->
+            <div class="slide transition-slide">
+                <h2>This year, your top tracks were...</h2>
             </div>
 
-            <!-- Cover Slide -->
-            <div class="slide cover-slide">
-                <h2>Welcome to Your Spotify Wrapped</h2>
-            </div>
-
-            {% if user_taste %}
-                <!-- Transition Slide for Top Tracks -->
-                <div class="slide transition-slide">
-                    <h2>This year, your top tracks were...</h2>
-                </div>
-
-                <div class="slide">
-                    <h2>Your Top Tracks</h2>
-                    <ul class="top-list">
-                        {% for track in user_taste.top_tracks %}
+            <div class="slide">
+                <h2>Your Top Tracks</h2>
+                <ul class="top-list">
+                    {% for track in user_taste.top_tracks %}
                         <li>{{ track.name }} - {{ track.artist }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                    {% endfor %}
+                </ul>
+            </div>
 
-                <!-- Transition Slide for Top Artists -->
-                <div class="slide transition-slide">
-                    <h2>Now, let's take a look at your top artists!</h2>
-                </div>
+            <!-- Transition Slide for Top Artists -->
+            <div class="slide transition-slide">
+                <h2>Now, let's take a look at your top artists!</h2>
+            </div>
 
-                <div class="slide">
-                    <h2>Your Top Artists</h2>
-                    <ul class="top-list">
-                        {% for artist in user_taste.top_artists %}
+            <div class="slide">
+                <h2>Your Top Artists</h2>
+                <ul class="top-list">
+                    {% for artist in user_taste.top_artists %}
                         <li>{{ artist.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <!-- Last Slide with Buttons -->
-                <div class="slide last-slide">
-                    <h2>Thank you for checking your Spotify Wrapped!</h2>
-                    <!-- Display the buttons on the last slide -->
-                    <button id="rewatch-button" onclick="rewatchSlideshow()">Rewatch</button>
-                    <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
-                    <a href="{% url 'logout' %}" class="nav-button">Logout</a>
-                </div>
-            {% else %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- Last Slide with Buttons -->
+            <div class="slide last-slide">
+                <h2>Thank you for checking your Spotify Wrapped!</h2>
+                <!-- Display the buttons on the last slide -->
+                <button id="rewatch-button" onclick="rewatchSlideshow()">Rewatch</button>
+                <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            </div>
+        {% else %}
             <!-- Fallback for No Data -->
             <div class="no-data">
                 <h3>Oops! No Spotify data available.</h3>
                 <p>Sign in to get started with your Spotify Wrapped experience.</p>
                 <a href="{% url 'spotify_login' %}" class="spotify-login-button">Sign in with Spotify</a>
             </div>
-            {% endif %}
-            <!-- Navigation Buttons -->
+        {% endif %}
+        <!-- Navigation Buttons -->
         <button class="nav-button" id="prev-button" onclick="changeSlide(-1)">Previous</button>
         <button class="nav-button" id="next-button" onclick="changeSlide(1)">Next</button>
     </div>
 
-    <!-- JavaScript -->
     <script src="{% static 'js/theme.js' %}"></script>
     <script src="{% static 'js/slideshow.js' %}"></script>
 </body>
