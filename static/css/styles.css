@@ -1,157 +1,372 @@
 /*styles.css*/ 
 /* Base styling */
+
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    font-family: 'Poppins', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
-    background-color: #1C1C1C; /* Dark background */
-    color: #FFFFFF;
+    text-align: center;
+    transition: background-color 0.5s, color 0.5s;
 }
-/* Dark Mode Styling */
+
+/* Themes */
+body.light-mode {
+    background: rgb(234,190,245);
+    background: linear-gradient(90deg, rgba(234,190,245,1) 4%, rgba(250,201,235,1) 49%, rgba(187,204,224,1) 100%);
+    color: #121212;
+}
+
 body.dark-mode {
-    background-color: #003057; /* GT navy for background */
-    color: #B3A369; /* GT gold for text */
+    background: rgb(149,42,176);
+    background: radial-gradient(circle, rgba(149,42,176,1) 4%, rgba(190,69,154,1) 49%, rgba(148,187,233,1) 100%);
+    color: #ffffff;
 }
 
-/* Main content area */
-.content {
-    max-width: 800px;
-    width: 90%;
-    padding: 1rem 1rem; /* Minimal padding */
-    box-sizing: border-box;
+/* Christmas Theme */
+body.christmas-mode {
+    color: #ffffff;
+    background-image: url("../images/christmas-back.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+}
+
+
+
+body.halloween-mode {
+    color: #ff7518;
+    background: rgb(232,104,15);
+    background: linear-gradient(90deg, rgba(232,104,15,1) 0%, rgba(238,164,112,1) 51%, rgba(232,104,15,1) 100%);
+}
+
+
+
+.theme-buttons {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    gap: 10px;
 }
 
-/* Ensure buttons are spaced and positioned correctly */
+.theme-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #1db954;
+    color: #ffffff;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.theme-buttons button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#toggle-dark-light {
+    background-color: #1db954;
+}
+
+#toggle-christmas {
+    background-color: #ff0000;
+}
+
+#toggle-halloween {
+    background-color: #ff7518;
+}
+
+/* Navigation Buttons */
 .nav-buttons {
     display: flex;
-    justify-content: center; /* Center the buttons horizontally */
-    gap: 1em; /* Add spacing between buttons */
-    margin-top: 2em; /* Add space above the buttons */
-    margin-bottom: 2em; /* Add space below the buttons */
+    gap: 10px;
+    justify-content: center;
+    margin-top: 40px; /* Adjusted for lower positioning */
+    padding-top: 20px;
 }
 
-.nav-button {
+.nav-button, .post-spotify-button {
     text-decoration: none;
-    padding: 0.75em 1.5em;
-    border-radius: 5px;
+    color: #ffffff;
+    background: rgb(158,43,103);
+    background: linear-gradient(90deg, rgba(158,43,103,1) 0%, rgba(205,47,129,1) 51%, rgba(158,43,103,1) 100%);
+    padding: 12px 24px;
+    border-radius: 30px;
+    transition: background-color 0.3s, box-shadow 0.3s;
     font-weight: bold;
-    font-size: 1rem;
-    color: #FFFFFF; /* White text for visibility */
-    background-color: #B3A369; /* GT gold */
-    transition: background-color 0.3s ease;
+    font-size: 18px;
 }
 
 .nav-button:hover {
-    background-color: #A3925A; /* Darker gold for hover effect */
+    background-color: #cd6693;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Post Spotify Wrapped Button */
-.post-spotify-button {
+/* Slideshow Styling */
+/* Slideshow Container with Card Effect */
+.slideshow-container {
+    margin-top: 100px;
+    padding: 40px;
+    border-radius: 15px;
+    background-image: url("../images/purple-gradient.webp");
+    background-size: cover; /* Makes the image cover the entire page */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-attachment: scroll;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    flex-direction: column; /* Arrange elements vertically */
+    align-items: center; /* Center elements horizontally */
+    justify-content: flex-end;
+    overflow: hidden;
+    height: 550px;
+}
+
+/* Add animation for the text */
+.slideshow-container h2,
+.slideshow-container p {
+    font-family: 'Montserrat', sans-serif;
+    color: #ffffff;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4); /* Adding text shadow for emphasis */
+    font-size: 2rem;
+    line-height: 1.4;
+    opacity: 1;
+    transform: translateY(30px);
+    animation: slideInText 2s forwards;
+    animation-fill-mode: forwards; /* Keep the final state of animation */
+}
+
+/* Fade-in and move up animation */
+@keyframes slideInText {
+    0% {
+        transform: translateY(30px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Ensure slide text remains visible when active */
+.slide.active h2,
+.slide.active p {
+    transform: translateY(0);
+}
+
+/* Active Slide Styling */
+.slide {
+    display: none;
+    animation: fadeIn 1s ease-in-out;
+    transform: scale(0.9);
+    opacity: 0;
+}
+
+.slide.active {
     display: block;
-    text-align: center;
-    padding: 1em;
-    margin: 2em auto; /* Center horizontally and add space above/below */
-    border-radius: 5px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #FFFFFF; /* White text */
-    background-color: #B3A369; /* GT gold */
-    transition: background-color 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
 }
 
-.post-spotify-button:hover {
-    background-color: #A3925A; /* Darker gold for hover effect */
+/* Add smooth transitions between slides */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Wrapped posts */
-.wrapped-post {
-    padding: 1.5em;
-    margin: 2em 0;
-    border-radius: 10px;
-    background-color: #F4F4F4; /* Light gray for posts */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-}
-
-body.dark-mode .wrapped-post {
-    background-color: #004C77; /* Darker navy for dark mode */
-    color: #B3A369; /* GT gold */
-    border-left: 5px solid #B3A369;
-}
-
-/* Input and button styling */
-form input[type="text"],
-form input[type="password"] {
-    width: 100%;
-    padding: 0.75rem;
-    margin: 0.5rem 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-}
-
-form button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #B3A369; /* GT gold */
-    color: #003057; /* GT navy */
-    font-weight: bold;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-}
-
-form button:hover {
-    background-color: #A3925A; /* Darker gold */
-}
-
-/* Dark Mode Input and Button Styling */
-body.dark-mode form input[type="text"],
-body.dark-mode form input[type="password"] {
-    background-color: #004C77; /* Dark navy */
-    color: #B3A369; /* GT gold */
-    border: 1px solid #B3A369;
-}
-
-body.dark-mode form button {
-    background-color: #B3A369; /* GT gold */
-    color: #003057; /* GT navy */
-}
-
-/* Footer (optional) */
-.footer {
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    color: #888888;
-}
-
-/* Toggle Button */
-.toggle-mode-button {
+/* Progress Bar (Bottom) */
+.progress-bar {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    background-color: #B3A369; /* GT gold */
-    color: #003057; /* GT navy */
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.toggle-mode-button:hover {
-    background-color: #A3925A; /* Darker gold */
+.progress-bar .progress {
+    width: 0;
+    height: 100%;
+    background-color: #cd6693;
+    border-radius: 10px;
+    animation: progressAnimation 3s infinite; /* Example animation for progress bar */
+}
+
+@keyframes progressAnimation {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* Custom Slide Indicators (Small Circles) */
+.slide-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.slide-indicator span {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.slide-indicator span.active {
+    background-color: #cd6693;
+}
+
+/* Transition Effects for Buttons */
+#prev-button, #next-button {
+    padding: 8px 16px; /* Make the buttons smaller */
+    font-size: 0.9rem; /* Adjust text size */
+    margin: 0; /* Remove extra margins */
+    background: rgb(158,43,103);
+    background: linear-gradient(90deg, rgba(158,43,103,1) 0%, rgba(205,47,129,1) 51%, rgba(158,43,103,1) 100%);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    position: absolute; /* Position relative to the container */
+    bottom: 35px; /* Place them near the bottom of the slideshow */
+}
+#prev-button {
+    left: 5%; /* Adjust distance from the left */
+}
+
+#next-button {
+    right: 5%; /* Adjust distance from the right */
+}
+#rewatch-button {
+    color: white;
+    padding: 8px 16px; /* Make the buttons smaller */
+    font-size: 0.9rem; /* Adjust text size */
+    margin: 0; /* Remove extra margins */
+    background-color: transparent;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    position: absolute; /* Position relative to the container */
+    top: 75px; /* Place them near the bottom of the slideshow */
+}
+
+
+#prev-button:hover, #next-button:hover {
+    background-color: #c33774;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+#rewatch-button:hover {
+    background-color: #c33774;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-link:hover {
+    background-color: #17a947;
+    transform: scale(1.05);
+}
+
+/* Dropdown for Theme Selection */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    color: #ffffff;
+    background-color: transparent;
+    padding: 8px 16px;
+    margin: 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.dropdown-toggle:hover {
+    background-color: #17a947;
+    transform: scale(1.05);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.dropdown-menu button {
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.dropdown-menu button:hover {
+    background-color: #1db954;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: flex;
 }
 
 .share-buttons {
@@ -183,89 +398,18 @@ body.dark-mode form button {
     background-color: #5865F2;
 }
 
-/* Progress bar styles */
-#progress-bar-container {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-#progress-bar {
-    height: 100%;
-    width: 0%;
-    background-color: #A3925A;
-    transition: width 0.1s linear;
-}
-
-/* Slideshow Container */
-.slideshow-container {
-    position: relative;
-    width: 80%;
-    max-width: 800px;
-    margin: 0 auto;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-}
-
-.slide {
-    display: none;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.slide.fade {
-    opacity: 1;
-}
-
-/* Progress Bar */
-#progress-container {
-    width: 100%;
-    height: 10px;
-    background: #f0f0f0;
-    margin-top: 20px;
-    border-radius: 5px;
-}
-
-#progress-bar {
-    height: 100%;
-    background: #A3925A;
-    width: 0%;
-    border-radius: 5px;
-}
-
-/* Buttons */
-.nav-buttons-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.nav-button, .action-button {
-    background-color: #A3925A;
+.like-button {
     color: white;
+    padding: 8px 16px; /* Make the buttons smaller */
+    font-size: 0.9rem; /* Adjust text size */
+    margin: 0; /* Remove extra margins */
+    background-color: transparent;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
-
-.nav-button:hover, .action-button:hover {
-    background-color: #A3925A;
-}
-
-.nav-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
 /* Fallback for No Data */
 .no-data {
     text-align: center;
@@ -330,20 +474,6 @@ body.dark-mode form button {
     }
 }
 
-/* Navigation Buttons */
-.nav-buttons-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-#prev-button {
-    margin-right: auto;  /* Pushes the Previous button to the left */
-}
-
-#next-button {
-    margin-left: auto;   /* Pushes the Next button to the right */
-}
 
 .speaker-icon {
     background: none;
