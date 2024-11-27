@@ -1,42 +1,163 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Georgia Tech Wrapped - Login</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Login Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffc0cb, #ff99ff, #d8bfd8); /* Gradient of light pink and purple */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-page {
+            display: flex;
+            width: 80%;
+            max-width: 1000px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, #6a11cb, #ffc0cb);
+            flex: 1;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .company-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        .welcome-section p {
+            font-size: 1em;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .footer-text {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .right-panel {
+            flex: 1;
+            background: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-section h2 {
+            margin: 0 0 10px;
+            font-size: 2em;
+            color: #6a11cb;
+        }
+
+        .login-section p {
+            margin: 0 0 20px;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            background: #6a11cb;
+            border: none;
+            color: white;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-button:hover {
+            background: #6a11cb;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .signup-link,
+        .forgot-password {
+            color: #6a11cb;
+            text-decoration: none;
+        }
+
+        .signup-link:hover,
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <!-- Dark/Light Mode Toggle Button -->
-    <button id="toggle-mode" class="toggle-mode-button" onclick="toggleMode()">Switch to Dark Mode</button>
-
-    <div class="login-container">
-        <div class="login-box">
-            <h1 class="login-title">Welcome to Georgia Tech Wrapped!</h1>
-            <p class="login-subtitle">Your Year, Your Data. Log in to explore your personalized insights!</p>
-
-            <!-- Login Form -->
-            <form method="post" action="{% url 'login' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="login-button">Log In</button>
-            </form>
-
-            <!-- Sign-Up Link -->
-            <p class="signup-link">
-                Don’t have an account? <a href="{% url 'signup' %}">Sign up here</a>
-            </p>
-
-            <!-- Footer -->
-            <div class="footer">
-                <p>© 2024 Georgia Tech Wrapped. All rights reserved.</p>
+    <div class="login-page">
+        <div class="left-panel">
+            <div class="company-logo">2340 Team 5</div>
+            <div class="welcome-section">
+                <h1>Welcome to Wrapped!</h1>
+                <p>Discover your personalized data insights for the year! Explore your most listened-to tracks, favorite genres, and top artists, all wrapped up just for you.</p>            </div>
+            <div class="footer-text">Sign in to see your unique trends and share them with friends!</div>
+        </div>
+        <div class="right-panel">
+            <div class="login-section">
+                <h2>Login</h2>
+                <p>Welcome! Login to get access to your year in music.</p>
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="User Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    
+                    <button type="submit" class="login-button">LOGIN</button>
+                </form>
+                <div class="form-footer">
+                    <a href="{% url 'signup' %}" class="signup-link">New User? Signup</a>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- JavaScript for theme toggling -->
-    <script src="{% static 'js/theme.js' %}"></script>
 </body>
 </html>

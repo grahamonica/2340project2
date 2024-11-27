@@ -6,16 +6,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Georgia Tech Wrapped - Sign Up</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffc0cb, #ff99ff, #d8bfd8); /* Gradient background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .signup-container {
+            display: flex;
+            flex-direction: row;
+            background: #ffffff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .left-section {
+            background: linear-gradient(135deg, #6a11cb, #ffc0cb);
+            flex: 1;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .left-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .left-section p {
+            font-size: 1.2rem;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .signup-box {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .signup-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #6a11cb;
+        }
+
+        .signup-subtitle {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #6a11cb;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+
+        .signup-button {
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .signup-button:hover {
+            background-color: #2575fc;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #6a11cb;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #999999;
+        }
+    </style>
 </head>
 <body>
-    <!-- Dark/Light Mode Toggle Button -->
-    <button id="toggle-mode" class="toggle-mode-button" onclick="toggleMode()">Switch to Dark Mode</button>
-
     <div class="signup-container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h1>Welcome to Wrapped</h1>
+            <p>See your personalized year-in-review experience. Discover your most listened-to tracks, favorite genres, and more!</p>
+        </div>
+
+        <!-- Right Section (Sign Up Form) -->
         <div class="signup-box">
-            <h1 class="signup-title">Join Georgia Tech Wrapped</h1>
-            <p class="signup-subtitle">Create your account to see your personalized wrap-up experience!</p>
+            <h1 class="signup-title">Sign Up</h1>
+            <p class="signup-subtitle">Join us and explore your data-driven insights!</p>
 
             <!-- Signup Form -->
             <form method="post" action="{% url 'signup' %}">
@@ -28,15 +154,7 @@
             <p class="login-link">
                 Already have an account? <a href="{% url 'login' %}">Log in here</a>
             </p>
-
-            <!-- Footer -->
-            <div class="footer">
-                <p>© 2024 Georgia Tech Wrapped. All rights reserved.</p>
-            </div>
         </div>
     </div>
-
-    <!-- JavaScript for theme toggling -->
-    <script src="{% static 'js/theme.js' %}"></script>
 </body>
 </html>
