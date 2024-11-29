@@ -10,7 +10,8 @@ function showSlides() {
     const nextButton = document.getElementById('next-button');
     const rewatchButton = document.getElementById('rewatch-button');
     const logoutButtons = document.querySelectorAll('.nav-button');
-    
+    const slideshowContainer = document.getElementById('slideshow-container');
+
     // Hide all slides and reset the progress bar
     slides.forEach((slide, index) => {
         slide.style.display = (index === slideIndex) ? 'block' : 'none';
@@ -20,15 +21,32 @@ function showSlides() {
     // Fade in the current slide
     slides[slideIndex].classList.add('fade');
 
-    // Reset and start the progress bar
-    progressBar.style.width = '0%';
-    clearInterval(progressBarTimer);
-    progressBarTimer = setInterval(() => {
-        const currentWidth = parseFloat(progressBar.style.width);
-        if (currentWidth < 100) {
-            progressBar.style.width = (currentWidth + 2) + '%';
+    // Handle progress bar and timer only if it's not the game slide
+    if (!slides[slideIndex].classList.contains('game-slide')) {
+        progressBar.style.width = '0%';
+        clearInterval(progressBarTimer);
+
+        // Progress bar logic
+        progressBarTimer = setInterval(() => {
+            const currentWidth = parseFloat(progressBar.style.width);
+            if (currentWidth < 100) {
+                progressBar.style.width = (currentWidth + 2) + '%';
+            }
+        }, 100);
+
+        // Automatically move to the next slide after 5 seconds (only if it's not the last slide)
+        if (slideIndex !== totalSlides - 1) {
+            slideInterval = setTimeout(() => {
+                changeSlide(1);
+            }, 5000);
         }
-    }, 100);
+    } else {
+        // Stop progress bar for game slide
+        progressBar.style.width = '0%';
+        clearInterval(progressBarTimer);
+        clearTimeout(slideInterval);
+        startGame(); // Start game logic
+    }
 
     // Show the buttons only on the last slide
     if (slideIndex === totalSlides - 1) {
@@ -42,27 +60,20 @@ function showSlides() {
     // Show/Hide navigation buttons
     prevButton.style.display = (slideIndex === 0) ? 'none' : 'block'; // Hide "Previous" button on the first slide
     nextButton.style.display = (slideIndex === totalSlides - 1) ? 'none' : 'block'; // Hide "Next" button on the last slide
-
-    // Set a timeout to automatically move to the next slide after 5 seconds, unless it's the last slide
-    if (slideIndex === totalSlides - 1) {
-        // For the last slide, wait 5 seconds before showing the rewatch button
-        setTimeout(() => {
-            slideshowContainer.style.display = 'none';  // Hide the slideshow
-            rewatchButton.style.display = 'block';     // Show the rewatch button
-        }, 5000);  // Wait for the last slide to finish before hiding
-    } else {
-        // For all other slides, move to the next slide after 5 seconds
-        slideInterval = setTimeout(() => {
-            changeSlide(1);
-        }, 5000);
-    }
 }
 
 function changeSlide(direction) {
     clearTimeout(slideInterval); // Stop the current slide change timeout
     clearInterval(progressBarTimer); // Stop the progress bar timer
+
     const slides = document.querySelectorAll('.slide');
     slideIndex = (slideIndex + direction + slides.length) % slides.length;
+
+    // If going back after the slideshow finishes, disable timer
+    if (slides[slideIndex].classList.contains('game-slide') || slideIndex === totalSlides - 1) {
+        clearTimeout(slideInterval); // Ensure no timer restarts
+    }
+
     showSlides();
 }
 
@@ -76,6 +87,6 @@ function rewatchSlideshow() {
 
 // Initialize the slideshow
 document.addEventListener('DOMContentLoaded', () => {
-    totalSlides = document.querySelectorAll('.slide').length;  // Get the total number of slides
+    totalSlides = document.querySelectorAll('.slide').length; // Get the total number of slides
     showSlides();
 });
