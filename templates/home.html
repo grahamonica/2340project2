@@ -8,6 +8,56 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
 </head>
+<style>
+    .slide {
+        display: none;
+        opacity: 1;
+        transition: opacity 1s ease-in-out;
+    }
+    .slide.fade {
+        opacity: 1;
+    }
+    .share-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    .share-buttons .btn:hover {
+        transform: scale(1.05);
+    }
+
+    .share-buttons .btn {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 8px 12px;
+        text-decoration: none;
+        color: white;
+        border-radius: 30px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .btn-twitter {
+        background: rgb(29,161,242);
+        background: linear-gradient(90deg, rgba(29,161,242,1) 0%, rgba(139,193,226,1) 51%, rgba(29,161,242,1) 100%);
+    }
+
+    .btn-instagram {
+        background: rgb(225,48,108);
+        background: linear-gradient(90deg, rgba(225,48,108,1) 0%, rgba(217,110,146,1) 51%, rgba(225,48,108,1) 100%);
+    }
+
+    .btn-facebook {
+        background: rgb(66,103,178);
+        background: linear-gradient(90deg, rgba(66,103,178,1) 0%, rgba(104,130,182,1) 51%, rgba(66,103,178,1) 100%);-color: #4267B2;
+    }
+
+    .btn-discord {
+        background: rgb(88,101,242);
+        background: linear-gradient(90deg, rgba(88,101,242,1) 0%, rgba(134,143,239,1) 51%, rgba(88,101,242,1) 100%);
+    }
+</style>
 <body class="dark-mode">
 <!-- Fixed Header -->
 <div class="header">
@@ -84,6 +134,24 @@
                 <button id="rewatch-button" onclick="rewatchSlideshow()">Rewatch</button>
                 <a href="{% url 'contact' %}" class="nav-button">Contact the Developers</a>
                 <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+                <div class="share-buttons">
+                    <a href="https://twitter.com/intent/tweet?text=Check out {{ post.user.username }}'s Spotify Wrapped! Top Tracks: {{ post.top_tracks|join:', ' }}; Top Artists: {{ post.top_artists|join:', ' }}" target="_blank" class="btn btn-twitter">
+                        Twitter
+                    </a>
+
+                    <a href="https://www.instagram.com/" target="_blank" class="btn btn-instagram">
+                        Instagram
+                    </a>
+
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-facebook">
+                        Facebook
+                    </a>
+
+                    <a href="https://discord.com/channels/@me" target="_blank" class="btn btn-discord">
+                        Discord
+                    </a>
+
+                </div>
             </div>
         {% else %}
             <!-- Fallback for No Data -->

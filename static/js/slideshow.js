@@ -60,6 +60,8 @@ function showSlides() {
     // Show/Hide navigation buttons
     prevButton.style.display = (slideIndex === 0) ? 'none' : 'block'; // Hide "Previous" button on the first slide
     nextButton.style.display = (slideIndex === totalSlides - 1) ? 'none' : 'block'; // Hide "Next" button on the last slide
+    prevButton.style.display = (slideIndex === totalSlides - 1) ? 'none' : 'block'; // Hide "Next" button on the last slide
+
 }
 
 function changeSlide(direction) {

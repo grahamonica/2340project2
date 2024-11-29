@@ -135,57 +135,25 @@ body.halloween-mode {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4); /* Adding text shadow for emphasis */
     font-size: 2rem;
     line-height: 1.4;
-    opacity: 1;
-    transform: translateY(30px);
-    animation: slideInText 2s forwards;
-    animation-fill-mode: forwards; /* Keep the final state of animation */
 }
 
-/* Fade-in and move up animation */
-@keyframes slideInText {
-    0% {
-        transform: translateY(30px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
 
-/* Ensure slide text remains visible when active */
-.slide.active h2,
-.slide.active p {
-    transform: translateY(0);
-}
 
-/* Active Slide Styling */
 .slide {
     display: none;
-    animation: fadeIn 1s ease-in-out;
-    transform: scale(0.9);
     opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
-
-.slide.active {
-    display: block;
+.slide.fade {
     opacity: 1;
-    transform: scale(1);
 }
 
-/* Add smooth transitions between slides */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+
 
 /* Progress Bar (Bottom) */
 .progress-bar {
     position: absolute;
+    color: black;
     bottom: 10px;
     left: 0;
     width: 100%;
@@ -376,10 +344,11 @@ body.halloween-mode {
 .share-buttons .btn {
     display: inline-block;
     margin-right: 10px;
-    padding: 10px 15px;
+    padding: 2px 1px;
     text-decoration: none;
     color: white;
-    border-radius: 5px;
+    border-radius: 30px;
+    font-size: 10px;
 }
 
 .btn-twitter {
@@ -464,12 +433,12 @@ body.halloween-mode {
     }
 
     .nav-button {
-        width: 100%;
+        width: 10%;
         margin-bottom: 10px;
     }
 
     .action-button {
-        width: 100%;
+        width: 10%;
         margin-top: 10px;
     }
 }
