@@ -34,4 +34,6 @@ urlpatterns = [
     path('spotify/callback/', views.spotify_callback, name='spotify_callback'),
     path('like/<int:post_id>/', views.toggle_like, name='toggle_like'),
     path('liked-posts/', views.liked_posts, name='liked_posts'),
+    path('account_info/', views.account_info, name='account_info'),
+    path('delete_account/', views.delete_account, name='delete_account'),
 ]

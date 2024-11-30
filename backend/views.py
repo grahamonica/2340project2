@@ -12,6 +12,17 @@ from django.contrib.auth import logout as django_logout
 from spotipy import SpotifyException
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
+from django.contrib.auth.models import User
+
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()  # Delete user and related data
+        return redirect('home')  # Redirect to the home page
+
+def account_info(request):
+    return render(request, 'account_info.html')
+
 
 @login_required
 def toggle_like(request, post_id):

@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Info</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<style>
+    .content {
+        margin-top: 80px;
+        padding: 40px;
+    }
+</style>
+<body class="dark-mode">
+    <!-- Light/Dark Mode Toggle Button -->
+    <div class="header">
+        <div class="nav-links">
+            <a href="{% url 'account_info' %}" class="nav-link">Account Info</a>
+            <a href="{% url 'spotify_social' %}" class="nav-link">Spotify Social</a>
+            <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+            <a href="{% url 'home' %}" class="nav-link">Back to Home</a>
+        </div>
+        <div class="dropdown">
+            <button class="dropdown-toggle">Select Theme</button>
+            <div class="dropdown-menu">
+                <button id="toggle-dark-light">Light/Dark Mode</button>
+                <button id="toggle-christmas">Christmas Theme</button>
+                <button id="toggle-halloween">Halloween Theme</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2>Manage Your Account</h2>
+        <p>Deleting your account will remove all your posts and data permanently.</p>
+        
+        <!-- Delete Account Button -->
+        <form method="post" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+            <button type="submit" class="delete-button">Delete My Account</button>
+        </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/social.js' %}"></script>
+    <script src="{% static 'js/theme.js' %}"></script>
+</body>
+</html>

@@ -1,93 +1,100 @@
-<!-- templates/contact.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact the Developers</title>
-    <style>
-        /* General styling */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #FFFFFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            flex-direction: column;
-        }
-
-        /* Title styling */
-        h1 {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #1DB954; /* Spotify Green */
-            margin-bottom: 0.5em;
-        }
-
-        /* Description styling */
-        p {
-            font-size: 1.1em;
-            color: #b3b3b3; /* Light grey */
-            max-width: 600px;
-            margin-bottom: 1em;
-            line-height: 1.5em;
-        }
-
-        /* Form styling */
-        form {
-            display: flex;
-            flex-direction: column;
-            width: 300px;
-            max-width: 80%;
-        }
-
-        /* Input and textarea styling */
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            background-color: #282828;
-            color: #FFFFFF;
-            border: 1px solid #1DB954;
-            border-radius: 5px;
-            padding: 0.8em;
-            margin-bottom: 1em;
-            font-size: 1em;
-            resize: vertical;
-        }
-
-        /* Button styling */
-        .btn {
-            background-color: #1DB954; /* Spotify Green */
-            color: #FFFFFF;
-            padding: 0.8em;
-            font-size: 1em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 0.5em;
-        }
-
-        .btn:hover {
-            background-color: #14833b; /* Darker green for hover effect */
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<body>
-    <h1>Contact the Developers</h1>
-    <p>If you have any questions, suggestions, or feedback, feel free to reach out to us. We’d love to hear from you!</p>
-    
-    <!-- Contact Form -->
-    <form action="{% url 'contact' %}" method="post">
-        {% csrf_token %}
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-        <button type="submit" class="btn">Send Message</button>
-    </form>
+<style>
+    .content {
+        margin-top: 80px;
+        padding: 40px;
+        text-align: center;
+    }
+
+    .content h2 {
+        font-size: 2.5em; /* Large modern font */
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .content p {
+        font-size: 1.2em; /* Larger text for readability */
+        line-height: 1.8em; /* Extra spacing between lines */
+        margin-bottom: 30px;
+        color: #b3b3b3; /* Light gray for subtle contrast */
+    }
+
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px; /* Consistent spacing between inputs */
+    }
+
+    .form-input {
+        width: 100%;
+        max-width: 500px; /* Limit form width for better readability */
+        padding: 15px;
+        font-size: 1em;
+        border: 1px solid #1DB954; /* Spotify green border */
+        border-radius: 5px;
+        background-color: #282828;
+        color: #FFFFFF;
+    }
+
+    .btn {
+        background-color: #1DB954;
+        color: #FFFFFF;
+        padding: 15px 30px;
+        font-size: 1.2em; /* Larger button text */
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #14833b; /* Darker green for hover */
+    }
+</style>
+<body class="dark-mode">
+    <!-- Fixed Header -->
+    <div class="header">
+        <div class="nav-links">
+            <a href="{% url 'spotify_social' %}" class="nav-link">Spotify Social</a>
+            <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+            <a href="{% url 'account_info' %}" class="nav-link">Account Info</a>
+            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+        </div>
+        <div class="dropdown">
+            <button class="dropdown-toggle">Select Theme</button>
+            <div class="dropdown-menu">
+                <button id="toggle-dark-light">Light/Dark Mode</button>
+                <button id="toggle-christmas">Christmas Theme</button>
+                <button id="toggle-halloween">Halloween Theme</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2>Contact the Developers</h2>
+        <p>If you have any questions, suggestions, or feedback, feel free to reach out to us. We’d love to hear from you!</p>
+
+        <!-- Contact Form -->
+        <form action="{% url 'contact' %}" method="post" class="contact-form">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name" class="form-input" required>
+            <input type="email" name="email" placeholder="Your Email" class="form-input" required>
+            <textarea name="message" placeholder="Your Message" rows="5" class="form-input" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/theme.js' %}"></script>
 </body>
 </html>
