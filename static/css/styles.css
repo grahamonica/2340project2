@@ -118,7 +118,6 @@ body.halloween-mode {
     background-attachment: scroll;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     max-width: 500px;
-    width: 90%;
     position: relative;
     flex-direction: column; /* Arrange elements vertically */
     align-items: center; /* Center elements horizontally */
@@ -135,6 +134,7 @@ body.halloween-mode {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4); /* Adding text shadow for emphasis */
     font-size: 2rem;
     line-height: 1.4;
+    width: 100%; /* Match the slideshow container's width */
 }
 
 
@@ -204,7 +204,7 @@ body.halloween-mode {
 }
 
 /* Transition Effects for Buttons */
-#prev-button, #next-button {
+#prev-button, #next-button, #rewatch-button {
     padding: 8px 16px; /* Make the buttons smaller */
     font-size: 0.9rem; /* Adjust text size */
     margin: 0; /* Remove extra margins */
@@ -217,27 +217,14 @@ body.halloween-mode {
     transition: background-color 0.3s, box-shadow 0.3s;
     position: absolute; /* Position relative to the container */
     bottom: 35px; /* Place them near the bottom of the slideshow */
+    color: white;
 }
-#prev-button {
+#prev-button, #rewatch-button {
     left: 5%; /* Adjust distance from the left */
 }
 
 #next-button {
     right: 5%; /* Adjust distance from the right */
-}
-#rewatch-button {
-    color: white;
-    padding: 8px 16px; /* Make the buttons smaller */
-    font-size: 0.9rem; /* Adjust text size */
-    margin: 0; /* Remove extra margins */
-    background-color: transparent;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    position: absolute; /* Position relative to the container */
-    top: 75px; /* Place them near the bottom of the slideshow */
 }
 
 
@@ -347,25 +334,11 @@ body.halloween-mode {
     padding: 2px 1px;
     text-decoration: none;
     color: white;
-    border-radius: 30px;
+    border-radius: 15px;
     font-size: 10px;
 }
 
-.btn-twitter {
-    background-color: #1DA1F2;
-}
 
-.btn-instagram {
-    background-color: #E1306C;
-}
-
-.btn-facebook {
-    background-color: #4267B2;
-}
-
-.btn-discord {
-    background-color: #5865F2;
-}
 
 .like-button {
     color: white;
@@ -433,12 +406,12 @@ body.halloween-mode {
     }
 
     .nav-button {
-        width: 10%;
+        width: 90%;
         margin-bottom: 10px;
     }
 
     .action-button {
-        width: 10%;
+        width: 90%;
         margin-top: 10px;
     }
 }
