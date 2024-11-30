@@ -161,35 +161,34 @@ body.halloween-mode {
 }
 
 
+#progress-container {
+    width: 100%;
+    height: 10px;
+    background: #f0f0f0;
+    margin-top: 20px;
+    border-radius: 5px;
+}
 
-/* Progress Bar (Bottom) */
-.progress-bar {
+#progress-bar {
+    height: 100%;
+    background: #A3925A;
+    width: 0%;
+    border-radius: 5px;
+}
+/* Progress bar styles */
+#progress-bar-container {
     position: absolute;
-    color: black;
     bottom: 10px;
     left: 0;
     width: 100%;
     height: 5px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.1);
 }
-
-.progress-bar .progress {
-    width: 0;
+#progress-bar {
     height: 100%;
-    background-color: #cd6693;
-    border-radius: 10px;
-    animation: progressAnimation 3s infinite; /* Example animation for progress bar */
-}
-
-@keyframes progressAnimation {
-    0% {
-        width: 0;
-    }
-    100% {
-        width: 100%;
-    }
+    width: 0%;
+    background-color: #A3925A;
+    transition: width 0.1s linear;
 }
 
 /* Custom Slide Indicators (Small Circles) */
