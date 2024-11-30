@@ -10,7 +10,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #ffc0cb, #ff99ff, #d8bfd8); /* Gradient background */
+            background: linear-gradient(135deg, #ffc0cb, #ff99ff, #d8bfd8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -69,6 +69,16 @@
             color: #6a11cb;
         }
 
+        .alert-message {
+            background-color: #ffefcc;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
         form {
             display: flex;
             flex-direction: column;
@@ -91,7 +101,6 @@
         input[type="checkbox"] {
             margin-right: 10px;
         }
-
 
         .signup-button {
             padding: 10px;
@@ -142,6 +151,11 @@
         <div class="signup-box">
             <h1 class="signup-title">Sign Up</h1>
             <p class="signup-subtitle">Join us and explore your data-driven insights!</p>
+
+            <!-- Alert Message for Spotify Linking -->
+            <div class="alert-message">
+                <strong>Important:</strong> After signing up, you will need to link your Spotify account to access personalized insights.
+            </div>
 
             <!-- Signup Form -->
             <form method="post" action="{% url 'signup' %}">

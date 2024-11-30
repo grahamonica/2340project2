@@ -1,39 +1,35 @@
-#urls.py
-"""
-URL configuration for backend project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from django.shortcuts import redirect
 from . import views
-from django.contrib.auth import views as auth_views  # <-- Add this line
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    # Admin
     path('admin/', admin.site.urls),
-    path('', views.spotify_presentation, name='home'),  # New home page
-    path('spotify-social/', views.spotify_social, name='spotify_social'),  # Old home page renamed
+
+    # Home Pages
+    path('', views.spotify_presentation, name='home'),  # Main home page with user data
+    path('spotify-social/', views.spotify_social, name='spotify_social'),  # Social page for public Wrapped
+
+    # Contact and Misc
     path('contact/', views.contact, name='contact'),
     path('thank-you/', views.thank_you, name='thank_you'),
+
+    # Account Management
     path('accounts/signup/', views.signup, name='signup'),
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
-    path('accounts/logout/', views.custom_logout, name='logout'),  # Use custom_logout
-    path('spotify/login/', views.spotify_login, name='spotify_login'),
-    path('spotify/callback/', views.spotify_callback, name='spotify_callback'),
-    path('like/<int:post_id>/', views.toggle_like, name='toggle_like'),
-    path('liked-posts/', views.liked_posts, name='liked_posts'),
+    path('accounts/logout/', views.custom_logout, name='logout'),
     path('account_info/', views.account_info, name='account_info'),
     path('delete_account/', views.delete_account, name='delete_account'),
+
+    # Spotify Authentication
+    path('spotify/login/', views.spotify_login, name='spotify_login'),
+    path('spotify/callback/', views.spotify_callback, name='spotify_callback'),
+    path('spotify/check-auth/', views.check_spotify_auth, name='check_spotify_auth'),
+
+
+    # Liking and Viewing Posts
+    path('like/<int:post_id>/', views.toggle_like, name='toggle_like'),
+    path('liked-posts/', views.liked_posts, name='liked_posts'),
 ]

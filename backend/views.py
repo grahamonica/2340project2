@@ -17,6 +17,20 @@ from django.contrib.auth.models import User
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from decouple import config
+from django.http import JsonResponse
+
+@login_required
+def check_spotify_auth(request):
+    """
+    Checks if the user's Spotify tokens are valid.
+    """
+    try:
+        # Attempt to fetch a valid access token
+        get_valid_spotify_token(request.user)
+        return JsonResponse({'status': 'ok'})  # Spotify tokens are valid
+    except ValueError:
+        return JsonResponse({'status': 'unauthorized'}, status=401)  # Spotify tokens are missing or invalid
+
 
 
 def send_email(name, email, message):
@@ -104,21 +118,26 @@ def liked_posts(request):
 @login_required
 def spotify_presentation(request):
     """
-    View for the new home page. Presents the user's Spotify data, including top tracks and top artists.
+    Fetches and displays the user's Spotify data.
     """
-    user_taste = None
     try:
-        # Fetch the user's latest Spotify Wrapped data
-        wrapped = SpotifyWrapped.objects.filter(user=request.user).latest('id')
+        access_token = get_valid_spotify_token(request.user)
+        sp = Spotify(auth=access_token)
+
+        # Fetch top tracks and artists
+        top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
+        top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
+
         user_taste = {
-            'top_tracks': wrapped.top_tracks,
-            'top_artists': wrapped.top_artists
+            'top_tracks': [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks],
+            'top_artists': [{'name': artist['name']} for artist in top_artists],
         }
-    except SpotifyWrapped.DoesNotExist:
-        # If no data exists for the user, set user_taste to None
+    except Exception as e:
+        print(f"Error fetching Spotify data: {e}")
         user_taste = None
 
     return render(request, 'home.html', {'user_taste': user_taste})
+
 
 @login_required
 def spotify_social(request):
@@ -134,112 +153,75 @@ def spotify_login(request):
     """
     Initiates Spotify login and authentication process.
     """
-    # Create a unique cache path for each user
-    cache_path = f".cache-{request.user.id}"
-    
     sp_oauth = SpotifyOAuth(
         client_id=settings.SPOTIPY_CLIENT_ID,
         client_secret=settings.SPOTIPY_CLIENT_SECRET,
         redirect_uri=settings.SPOTIPY_REDIRECT_URI,
         scope="user-top-read user-read-private user-read-email",
-        cache_path=cache_path,
-        show_dialog=True
+        show_dialog=True,
     )
-    
-    # Clear any existing token
-    if os.path.exists(cache_path):
-        os.remove(cache_path)
-    
+
     # Generate authorization URL
     auth_url = sp_oauth.get_authorize_url()
-    request.session['cache_path'] = cache_path
-    
     return redirect(auth_url)
+
+
+from datetime import datetime, timedelta
+from .models import SpotifyAuth
 
 @login_required
 def spotify_callback(request):
     """
-    Handles Spotify's OAuth callback and posts the home page slideshow presentation.
+    Handles Spotify's OAuth callback and saves the user's Spotify tokens.
     """
     code = request.GET.get('code')
-    cache_path = request.session.get('cache_path', None)
 
     sp_oauth = SpotifyOAuth(
         client_id=settings.SPOTIPY_CLIENT_ID,
         client_secret=settings.SPOTIPY_CLIENT_SECRET,
         redirect_uri=settings.SPOTIPY_REDIRECT_URI,
         scope="user-top-read user-read-private user-read-email",
-        cache_path=cache_path
     )
 
     try:
-        # Get access token
+        # Get access and refresh tokens
         token_info = sp_oauth.get_access_token(code)
-        sp = Spotify(auth=token_info['access_token'])
+        access_token = token_info['access_token']
+        refresh_token = token_info['refresh_token']
+        expires_at = datetime.now() + timedelta(seconds=token_info['expires_in'])
 
-        # Fetch top tracks, artists, and genres
-        top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
-        top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
-        top_genres = {genre for artist in top_artists for genre in artist.get('genres', [])}
-
-        # Construct the slideshow HTML (reuse the home page format)
-        slideshow_html = f"""
-        <div class="slideshow-container">
-            <div class="slide">
-                <h2>Your Spotify Wrapped</h2>
-            </div>
-            <div class="slide">
-                <h3>Top Tracks:</h3>
-                <ul>
-                    {''.join(f'<li>{track["name"]} by {track["artists"][0]["name"]}</li>' for track in top_tracks)}
-                </ul>
-            </div>
-            <div class="slide">
-                <h3>Top Artists:</h3>
-                <ul>
-                    {''.join(f'<li>{artist["name"]}</li>' for artist in top_artists)}
-                </ul>
-            </div>
-            <div class="slide">
-                <h3>Top Genres:</h3>
-                <ul>
-                    {''.join(f'<li>{genre}</li>' for genre in top_genres)}
-                </ul>
-            </div>
-        </div>
-        <div class="controls">
-            <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-            <button class="next" onclick="changeSlide(1)">&#10095;</button>
-        </div>
-        """
-
-        # Save the slideshow as the presentation
-        SpotifyWrapped.objects.create(
+        # Save tokens in the database
+        SpotifyAuth.objects.update_or_create(
             user=request.user,
-            presentation=slideshow_html,
-            is_public=True
+            defaults={
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+                'expires_at': expires_at,
+                'scope': token_info.get('scope', ''),
+            },
         )
 
-        messages.success(request, "Your Spotify Wrapped slideshow has been posted!")
+        messages.success(request, "Spotify account linked successfully!")
     except Exception as e:
         print(f"Error during Spotify callback: {e}")
-        messages.error(request, "Failed to post your Spotify Wrapped slideshow.")
+        messages.error(request, "Failed to connect Spotify account.")
 
-    # Redirect to Spotify Social page
-    return redirect('spotify_social')
-
+    # Redirect to the home page or desired location
+    return redirect('home')
 
 def signup(request):
     """
-    Handles user sign-up process.
+    Handles user sign-up process and redirects to Spotify login.
     """
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, "Account created successfully!")
-            return redirect("home")
+            login(request, user)  # Log the user in immediately
+
+            # Redirect to Spotify login after account creation
+            messages.success(request, "Account created successfully! Please link your Spotify account.")
+            return redirect("spotify_login")
     else:
         form = CustomUserCreationForm()
 
@@ -249,12 +231,45 @@ def custom_logout(request):
     """
     Logs the user out and clears Spotify token info.
     """
+    # Clear Spotify tokens from the database
+    try:
+        SpotifyAuth.objects.filter(user=request.user).delete()
+    except Exception as e:
+        print(f"Error clearing Spotify tokens: {e}")
+
+    # Log out from Django session
     django_logout(request)
-    request.session.pop('token_info', None)
-    return redirect("https://accounts.spotify.com/en/logout")
+
+    # Redirect to the site's login page
+    return redirect("login")
 
 def thank_you(request):
     """
     Displays a thank-you page after form submissions.
     """
     return render(request, 'thank_you.html')
+
+
+from spotipy.oauth2 import SpotifyOAuth
+from django.utils.timezone import now
+
+def get_valid_spotify_token(user):
+    """
+    Returns a valid Spotify access token, refreshing if necessary.
+    """
+    try:
+        spotify_auth = SpotifyAuth.objects.get(user=user)
+        if now() >= spotify_auth.expires_at:  # Use timezone-aware `now()` from Django
+            # Token expired, refresh it
+            sp_oauth = SpotifyOAuth(
+                client_id=settings.SPOTIPY_CLIENT_ID,
+                client_secret=settings.SPOTIPY_CLIENT_SECRET,
+                redirect_uri=settings.SPOTIPY_REDIRECT_URI,
+            )
+            token_info = sp_oauth.refresh_access_token(spotify_auth.refresh_token)
+            spotify_auth.access_token = token_info['access_token']
+            spotify_auth.expires_at = now() + timedelta(seconds=token_info['expires_in'])  # Ensure timezone-awareness
+            spotify_auth.save()
+        return spotify_auth.access_token
+    except SpotifyAuth.DoesNotExist:
+        raise ValueError("Spotify tokens not found. User needs to log in.")

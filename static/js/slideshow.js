@@ -87,8 +87,26 @@ function rewatchSlideshow() {
     showSlides();
 }
 
+// Function to check Spotify authentication and redirect if not authenticated
+function checkSpotifyAuth() {
+    fetch('/spotify/check-auth/')  // Backend endpoint to verify Spotify tokens
+        .then(response => {
+            if (response.status === 401) {
+                // If not authenticated, redirect to Spotify login
+                window.location.href = '/spotify/login/';
+            }
+        })
+        .catch(error => {
+            console.error('Error checking Spotify authentication:', error);
+        });
+}
+
 // Initialize the slideshow
 document.addEventListener('DOMContentLoaded', () => {
     totalSlides = document.querySelectorAll('.slide').length; // Get the total number of slides
+
+    // Check Spotify authentication on load
+    checkSpotifyAuth();
+
     showSlides();
 });

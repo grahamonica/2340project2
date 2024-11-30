@@ -14,3 +14,14 @@ class SpotifyWrapped(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Spotify Wrapped"
+
+# New Model to Store Spotify Authentication Tokens
+class SpotifyAuth(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    access_token = models.CharField(max_length=255)
+    refresh_token = models.CharField(max_length=255)
+    expires_at = models.DateTimeField()  # When the access token expires
+    scope = models.TextField(null=True, blank=True)  # Scope of the access token
+
+    def __str__(self):
+        return f"Spotify Auth for {self.user.username}"
