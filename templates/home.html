@@ -11,14 +11,31 @@
 
 </head>
 <style>
-    .slide {
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f9;
+      }
+      .slide {
         display: none;
+        text-align: center;
+        font-size: 1.5rem;
+        line-height: 1.5;
+      }
+      .slide.active {
+        display: block;
+      }
+      .line {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+      .line.visible {
         opacity: 1;
-        transition: opacity 1s ease-in-out;
-    }
-    .slide.fade {
-        opacity: 1;
-    }
+      }
 
 
     .btn-twitter {
@@ -199,7 +216,7 @@
                 <h2>Your Top Tracks</h2>
                 <ul class="top-list">
                     {% for track in user_taste.top_tracks %}
-                        <li>{{ track.name }} - {{ track.artist }}</li>
+                        <li class="line">{{ track.name }} - {{ track.artist }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -213,7 +230,7 @@
                 <h2>Your Top Artists</h2>
                 <ul class="top-list">
                     {% for artist in user_taste.top_artists %}
-                        <li>{{ artist.name }}</li>
+                        <li class="line">{{ artist.name }}</li>
                     {% endfor %}
                 </ul>
             </div>

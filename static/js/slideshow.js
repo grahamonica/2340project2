@@ -2,6 +2,7 @@ let slideIndex = 0;
 let slideInterval;
 let progressBarTimer;
 let totalSlides;
+let lineInterval;
 
 function showSlides() {
     const slides = document.querySelectorAll('.slide');
@@ -10,7 +11,6 @@ function showSlides() {
     const nextButton = document.getElementById('next-button');
     const rewatchButton = document.getElementById('rewatch-button');
     const logoutButtons = document.querySelectorAll('.nav-button');
-    const slideshowContainer = document.getElementById('slideshow-container');
 
     // Hide all slides and reset the progress bar
     slides.forEach((slide, index) => {
@@ -21,8 +21,37 @@ function showSlides() {
     // Fade in the current slide
     slides[slideIndex].classList.add('fade');
 
-    // Handle progress bar and timer only if it's not the game slide
-    if (!slides[slideIndex].classList.contains('game-slide')) {
+    // Handle line-by-line animation
+    const currentSlide = slides[slideIndex];
+    const lines = currentSlide.querySelectorAll('.line');
+    lines.forEach(line => line.classList.remove('visible')); // Reset all lines
+    let currentLineIndex = 0;
+
+    clearInterval(lineInterval); // Clear any previous line intervals
+
+    const timePerLine = 1000; // Time in ms for each line to appear
+    const extraTime = 1500; // Extra time to wait after the last line appears
+
+    if (lines.length > 0) {
+        lineInterval = setInterval(() => {
+            if (currentLineIndex < lines.length) {
+                lines[currentLineIndex].classList.add('visible');
+                currentLineIndex++;
+            } else {
+                clearInterval(lineInterval); // Stop once all lines are visible
+
+                // If it's not the last slide, schedule the slide change after extra time
+                if (slideIndex !== totalSlides - 1) {
+                    slideInterval = setTimeout(() => {
+                        changeSlide(1);
+                    }, extraTime);
+                }
+            }
+        }, timePerLine);
+    }
+
+    // Handle progress bar and timer for slides without lines
+    if (lines.length === 0 && !currentSlide.classList.contains('game-slide')) {
         progressBar.style.width = '0%';
         clearInterval(progressBarTimer);
 
@@ -60,13 +89,12 @@ function showSlides() {
     // Show/Hide navigation buttons
     prevButton.style.display = (slideIndex === 0) ? 'none' : 'block'; // Hide "Previous" button on the first slide
     nextButton.style.display = (slideIndex === totalSlides - 1) ? 'none' : 'block'; // Hide "Next" button on the last slide
-    prevButton.style.display = (slideIndex === totalSlides - 1) ? 'none' : 'block'; // Hide "Next" button on the last slide
-
 }
 
 function changeSlide(direction) {
     clearTimeout(slideInterval); // Stop the current slide change timeout
     clearInterval(progressBarTimer); // Stop the progress bar timer
+    clearInterval(lineInterval); // Stop the line-by-line interval
 
     const slides = document.querySelectorAll('.slide');
     slideIndex = (slideIndex + direction + slides.length) % slides.length;
