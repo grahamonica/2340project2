@@ -12,7 +12,7 @@
 </head>
 <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Montserrat', sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -119,6 +119,12 @@
             padding: 20px;
             height: 600px;
         }
+        .slide {
+            display: none;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
 
         .header {
             flex-direction: column;
@@ -151,10 +157,25 @@
             line-height: 1.4;
             width: 100%; /* Match the slideshow container's width */
         }
+        body {
+            font-size: 1rem;
+        }
 
 
     }
-
+    #submit-answer {
+        padding: 8px 16px; /* Make the buttons smaller */
+        font-size: 0.9rem; /* Adjust text size */
+        margin: 0; /* Remove extra margins */
+        background: rgb(158,43,103);
+        background: linear-gradient(90deg, rgba(158,43,103,1) 0%, rgba(205,47,129,1) 51%, rgba(158,43,103,1) 100%);
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        color: white;
+    }
 
 </style>
 <body class="dark-mode">
