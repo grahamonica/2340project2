@@ -11,8 +11,49 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth import logout as django_logout
 from spotipy import SpotifyException
 from django.shortcuts import get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.models import User
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from decouple import config
+
+
+def send_email(name, email, message):
+    try:
+        sg_message = Mail(
+            from_email='monicagraham40@gmail.com',  # Your verified sender email
+            to_emails='monicagraham40@gmail.com',  # Replace with recipient email
+            subject='Contact Form Submission',
+            html_content=f"""
+                <h1>New Contact Form Submission</h1>
+                <p><strong>Name:</strong> {name}</p>
+                <p><strong>Email:</strong> {email}</p>
+                <p><strong>Message:</strong><br>{message}</p>
+            """
+        )
+        sg = SendGridAPIClient(config('SENDGRID_API_KEY'))
+        response = sg.send(sg_message)
+        print(f"Response status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        # Log form data to the terminal
+        print(f"New Contact Form Submission:\nName: {name}\nEmail: {email}\nMessage: {message}")
+
+        # Send email using SendGrid
+        send_email(name, email, message)
+
+        # Redirect to thank you page
+        return HttpResponseRedirect(reverse('thank_you'))
+    
+    return render(request, 'contact.html')
 
 def delete_account(request):
     if request.method == 'POST':
@@ -211,19 +252,6 @@ def custom_logout(request):
     django_logout(request)
     request.session.pop('token_info', None)
     return redirect("https://accounts.spotify.com/en/logout")
-
-def contact(request):
-    """
-    Handles contact form submissions.
-    """
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        message = request.POST.get('message')
-        print(f"New message from {name} ({email}): {message}")
-        return render(request, 'thank_you.html')
-    
-    return render(request, 'contact.html')
 
 def thank_you(request):
     """
