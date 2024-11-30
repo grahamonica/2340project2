@@ -28,7 +28,7 @@ body.dark-mode {
 
 /* Christmas Theme */
 body.christmas-mode {
-    color: #ffffff;
+    color: black;
     background-image: url("../images/christmas-back.jpg");
     background-size: cover;
     background-attachment: fixed;
@@ -38,7 +38,7 @@ body.christmas-mode {
 
 
 body.halloween-mode {
-    color: #ff7518;
+    color: black;
     background: rgb(232,104,15);
     background: linear-gradient(90deg, rgba(232,104,15,1) 0%, rgba(238,164,112,1) 51%, rgba(232,104,15,1) 100%);
 }

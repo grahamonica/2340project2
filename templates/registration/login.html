@@ -14,15 +14,19 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            padding: 10px; /* Ensure there's padding on mobile */
+            box-sizing: border-box;
         }
 
         .login-page {
             display: flex;
-            width: 80%;
+            flex-direction: row;
+            width: 100%;
             max-width: 1000px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
             overflow: hidden;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
         }
 
         .left-panel {
@@ -94,7 +98,6 @@
             margin-right: 10px;
         }
 
-
         .login-button {
             width: 100%;
             padding: 10px;
@@ -127,37 +130,123 @@
         .forgot-password:hover {
             text-decoration: underline;
         }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px; /* Add padding on smaller screens */
+            }
+
+            .login-page {
+                flex-direction: column;
+                width: 100%;
+                padding: 10px; /* Padding for smaller screens */
+            }
+
+            .left-panel, .right-panel {
+                flex: none;
+                padding: 20px;
+            }
+
+            .left-panel {
+                background: linear-gradient(135deg, #6a11cb, #ffc0cb);
+                padding: 20px;
+            }
+
+            .right-panel {
+                padding: 20px;
+                background: white;
+            }
+
+            .company-logo {
+                font-size: 1.2em;
+            }
+
+            .welcome-section h1 {
+                font-size: 2em;
+                margin-bottom: 10px;
+            }
+
+            .login-section h2 {
+                font-size: 1.5em;
+            }
+
+            .login-button {
+                padding: 12px;
+                font-size: 1.2em;
+            }
+
+            .form-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .signup-link {
+                margin-top: 10px;
+            }
+            .form-group {
+                margin-bottom: 15px;
+                width: 70%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-section p {
+                font-size: 0.9em;
+            }
+
+            .form-group input {
+                padding: 12px; /* Adjust input padding for smaller screens */
+            }
+            .form-group {
+                margin-bottom: 15px;
+                width: 90%;
+            }
+
+            .footer-text {
+                font-size: 0.8em;
+            }
+
+            .company-logo {
+                font-size: 1em;
+            }
+
+            .login-section p {
+                font-size: 0.8em;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="login-page">
-        <div class="left-panel">
-            <div class="company-logo">2340 Team 5</div>
-            <div class="welcome-section">
-                <h1>Welcome to Wrapped!</h1>
-                <p>Discover your personalized data insights for the year! Explore your most listened-to tracks, favorite genres, and top artists, all wrapped up just for you.</p>            </div>
-            <div class="footer-text">Sign in to see your unique trends and share them with friends!</div>
+<div class="login-page">
+    <div class="left-panel">
+        <div class="company-logo">2340 Team 5</div>
+        <div class="welcome-section">
+            <h1>Welcome to Wrapped!</h1>
+            <p>Discover your personalized data insights for the year! Explore your most listened-to tracks, favorite genres, and top artists, all wrapped up just for you.</p>
         </div>
-        <div class="right-panel">
-            <div class="login-section">
-                <h2>Login</h2>
-                <p>Welcome! Login to get access to your year in music.</p>
-                <form method="post" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input type="text" name="username" placeholder="User Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" name="password" placeholder="Password" required>
-                    </div>
-                    
-                    <button type="submit" class="login-button">LOGIN</button>
-                </form>
-                <div class="form-footer">
-                    <a href="{% url 'signup' %}" class="signup-link">New User? Signup</a>
+        <div class="footer-text">Sign in to see your unique trends and share them with friends!</div>
+    </div>
+    <div class="right-panel">
+        <div class="login-section">
+            <h2>Login</h2>
+            <p>Welcome! Login to get access to your year in music.</p>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="username" placeholder="User Name" required>
                 </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="login-button">LOGIN</button>
+            </form>
+            <div class="form-footer">
+                <a href="{% url 'signup' %}" class="signup-link">New User? Signup</a>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

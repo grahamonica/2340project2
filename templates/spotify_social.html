@@ -3,6 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Spotify Social</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
@@ -17,14 +19,13 @@
     <!-- Light/Dark Mode Toggle Button -->
     <div class="header">
         <div class="nav-links">
-            <a href="{% url 'spotify_social' %}" class="nav-link">Spotify Social</a>
             <a href="{% url 'contact' %}" class="nav-link">Contact</a>
             <a href="{% url 'logout' %}" class="nav-link">Logout</a>
-            <a href="{% url 'home' %}" class="nav-link">Back to Home</a>
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
 
         </div>
         <div class="dropdown">
-            <button class="dropdown-toggle">Select Theme</button>
+            <button class="dropdown-toggle">Theme</button>
             <div class="dropdown-menu">
                 <button id="toggle-dark-light">Light/Dark Mode</button>
                 <button id="toggle-christmas">Christmas Theme</button>
