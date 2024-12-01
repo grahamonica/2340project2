@@ -13,6 +13,27 @@
         margin-top: 80px;
         padding: 40px;
     }
+    .post-item {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+    .post-item h3 {
+        margin: 0 0 10px;
+    }
+    .delete-post-button {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+    .delete-post-button:hover {
+        background-color: #e60000;
+    }
 </style>
 <body class="dark-mode">
     <!-- Light/Dark Mode Toggle Button -->
@@ -44,6 +65,25 @@
             {% csrf_token %}
             <button type="submit" class="delete-button">Delete My Account</button>
         </form>
+
+        <!-- User Posts Section -->
+        <h2>Your Posts</h2>
+        {% if user_posts %}
+            {% for post in user_posts %}
+            <div class="post-item">
+                <h3>{{ post.created_at|date:"F j, Y, g:i a" }}</h3>
+                <div class="post-content">
+                    {{ post.presentation|safe }}
+                </div>
+                <form method="post" action="{% url 'delete_post' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-post-button">Delete Post</button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>You have not made any posts yet.</p>
+        {% endif %}
     </div>
 
     <!-- JavaScript -->

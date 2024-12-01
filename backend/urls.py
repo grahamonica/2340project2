@@ -34,4 +34,6 @@ urlpatterns = [
     # Liking and Viewing Posts
     path('like/<int:post_id>/', views.toggle_like, name='toggle_like'),
     path('liked-posts/', views.liked_posts, name='liked_posts'),
+    path('delete-post/<int:post_id>/', views.delete_post, name='delete_post'),
+
 ]

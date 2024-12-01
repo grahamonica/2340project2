@@ -76,9 +76,27 @@ def delete_account(request):
         user.delete()  # Delete user and related data
         return redirect('home')  # Redirect to the home page
 
-def account_info(request):
-    return render(request, 'account_info.html')
+from django.contrib import messages
 
+@login_required
+def account_info(request):
+    """
+    Displays the user's past posts and provides an option to delete them.
+    """
+    # Fetch all posts by the logged-in user
+    user_posts = SpotifyWrapped.objects.filter(user=request.user)
+
+    return render(request, 'account_info.html', {'user_posts': user_posts})
+
+@login_required
+def delete_post(request, post_id):
+    """
+    Deletes a specific post made by the user.
+    """
+    post = get_object_or_404(SpotifyWrapped, id=post_id, user=request.user)
+    post.delete()
+    messages.success(request, "Post deleted successfully!")
+    return redirect('account_info')
 
 @login_required
 def toggle_like(request, post_id):
@@ -336,3 +354,76 @@ def post_spotify_presentation(request):
         messages.error(request, "Failed to post Spotify Wrapped.")
 
     return redirect('spotify_social')
+
+@login_required
+def delete_post(request, post_id):
+    """
+    Deletes a specific post created by the logged-in user.
+    """
+    try:
+        # Get the post associated with the logged-in user
+        post = get_object_or_404(SpotifyWrapped, id=post_id, user=request.user)
+
+        # Delete the post
+        post.delete()
+
+        # Display a success message and redirect
+        messages.success(request, "Your post has been deleted successfully!")
+    except Exception as e:
+        print(f"Error deleting post: {e}")
+        messages.error(request, "An error occurred while trying to delete the post.")
+
+    return redirect('account_info')
+
+from collections import Counter
+
+@login_required
+def duo_wrapped(request, post_id):
+    """
+    Generates a Duo Wrapped comparison between the logged-in user and another user's post.
+    """
+    try:
+        # Get the logged-in user's Wrapped
+        user_wrapped = SpotifyWrapped.objects.get(user=request.user)
+        if not user_wrapped.top_artists or not user_wrapped.top_tracks:
+            messages.error(request, "Your Spotify Wrapped data is incomplete. Please regenerate your Wrapped.")
+            return redirect('spotify_social')
+
+        # Get the selected user's Wrapped post
+        other_wrapped = get_object_or_404(SpotifyWrapped, id=post_id)
+        if not other_wrapped.top_artists or not other_wrapped.top_tracks:
+            messages.error(request, "The selected user's Spotify Wrapped data is incomplete.")
+            return redirect('spotify_social')
+
+        # Extract data safely
+        user_artists = [artist.get('name') for artist in user_wrapped.top_artists]
+        other_artists = [artist.get('name') for artist in other_wrapped.top_artists]
+
+        user_tracks = [track.get('name') for track in user_wrapped.top_tracks]
+        other_tracks = [track.get('name') for track in other_wrapped.top_tracks]
+
+        # Compare overlaps
+        shared_artists = set(user_artists) & set(other_artists)
+        shared_tracks = set(user_tracks) & set(other_tracks)
+
+        # Prepare data for the template
+        context = {
+            'user_wrapped': user_wrapped,
+            'other_wrapped': other_wrapped,
+            'shared_artists': shared_artists,
+            'shared_tracks': shared_tracks,
+            'unique_user_artists': set(user_artists) - shared_artists,
+            'unique_other_artists': set(other_artists) - shared_artists,
+            'unique_user_tracks': set(user_tracks) - shared_tracks,
+            'unique_other_tracks': set(other_tracks) - shared_tracks,
+        }
+
+        return render(request, 'duo_wrapped.html', context)
+
+    except SpotifyWrapped.DoesNotExist:
+        messages.error(request, "You must have a Spotify Wrapped to view a Duo Wrapped.")
+        return redirect('spotify_social')
+    except Exception as e:
+        print(f"Error in Duo Wrapped: {e}")
+        messages.error(request, "An error occurred while generating Duo Wrapped.")
+        return redirect('spotify_social')
