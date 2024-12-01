@@ -1,24 +1,51 @@
 .track-list {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .track-item {
-    padding: 10px;
+    padding: 15px;
     margin: 5px 0;
-    background-color: #333;
+    background-color: #1db954;
     color: #fff;
-    border-radius: 5px;
-    cursor: move;
+    border-radius: 8px;
+    cursor: grab;
     text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, background-color 0.3s;
+    position: relative;
+}
+
+.track-item.dragged {
+    opacity: 0.5;
+    transform: scale(1.05); /* Slight enlargement when dragged */
+    background-color: #14833b;
+}
+
+.track-item:hover {
+    transform: translateY(-3px);
 }
 
 .track-item:active {
-    opacity: 0.7;
+    opacity: 0.8;
+    cursor: grabbing;
 }
 
 .game-feedback {
-    margin-top: 10px;
+    margin-top: 20px;
     font-weight: bold;
+    font-size: 18px;
+    color: #fff;
+}
+
+.heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+    text-align: center;
 }
