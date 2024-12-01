@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <title>Spotify Social</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.scrollTo(0, 0); // Ensures the page starts at the top
+        });
+    </script>
     <style>
         body {
             margin: 0;
@@ -16,6 +21,39 @@
             min-height: 100vh;
             text-align: center;
             transition: background-color 0.5s, color 0.5s;
+        }
+        .content {
+            margin-top: 60px; /* Adjust this value based on your header's height */
+            width: 90%;
+            max-width: 800px;
+            overflow-y: auto;
+        }
+        .presentation {
+            display: flex; /* Enables flexbox for centering */
+            justify-content: center; /* Horizontally centers the content */
+            align-items: center; /* Vertically centers the content */
+            flex-direction: column; /* Ensures content stacks vertically, if needed */
+            height: auto; /* Adjusts the height dynamically */
+            margin: 0 auto; /* Centers the slideshow within its parent */
+            width: 100%;
+        }
+        .slideshow-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 600px; /* Optional: adjust based on your slideshow size */
+            height: auto; /* Keep the aspect ratio */
+            margin: 0 auto;
+        }
+        .slideshow-container h2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 600px; /* Optional: adjust based on your slideshow size */
+            height: auto; /* Keep the aspect ratio */
+            margin-top: 15px;
         }
 
         /* Themes */
@@ -34,6 +72,7 @@
             top: 0;
             left: 0;
             width: 100%;
+            height: 50px;
             background-color: rgba(0, 0, 0, 0.7);
             color: #ffffff;
             display: flex;
@@ -66,11 +105,7 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .content {
-            margin-top: 100px;
-            width: 90%;
-            max-width: 800px;
-        }
+
 
         .wrapped-post {
             background: rgba(0, 0, 0, 0.05);
@@ -82,17 +117,12 @@
         .like-section {
             margin-top: 20px;
         }
+        .wrapped-post {
+        }
     </style>
 </head>
 <body class="dark-mode">
     <!-- Header -->
-    <div class="header">
-        <div class="theme-buttons">
-            <button id="toggle-dark-light">Light/Dark Mode</button>
-            <button id="toggle-christmas">Christmas Theme</button>
-            <button id="toggle-halloween">Halloween Theme</button>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="content">
@@ -103,6 +133,16 @@
             {% csrf_token %}
             <button type="submit" class="post-spotify-button">Post Your Spotify Wrapped</button>
         </form>
+        <a
+                href="{% url 'liked_posts' %}?filter_liked={% if not filter_liked %}true{% else %}false{% endif %}"
+                class="nav-button">
+            {% if filter_liked %}
+                Show All Posts
+            {% else %}
+                Filter Liked Posts
+            {% endif %}
+        </a>
+
 
         <!-- Display Public Posts -->
         {% for post in public_wrapped_posts %}
@@ -129,20 +169,9 @@
 
     <!-- JavaScript -->
     <script src="{% static 'js/social.js' %}"></script>
-    <script>
-        const body = document.body;
-        document.getElementById('toggle-dark-light').addEventListener('click', () => {
-            body.className = body.classList.contains('light-mode') ? 'dark-mode' : 'light-mode';
-        });
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/slideshow.js' %}"></script>
 
-        document.getElementById('toggle-christmas').addEventListener('click', () => {
-            body.className = 'christmas-mode';
-        });
-
-        document.getElementById('toggle-halloween').addEventListener('click', () => {
-            body.className = 'halloween-mode';
-        });
-    </script>
 </body>
 </html>
 
