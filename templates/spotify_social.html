@@ -125,10 +125,20 @@
         <h2>Public Spotify Wrapped Presentations</h2>
 
         <!-- Post Spotify Wrapped Button -->
-        <form action="{% url 'post_spotify_presentation' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="post-spotify-button">Post Your Spotify Wrapped</button>
-        </form>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+            <form action="{% url 'post_spotify_presentation' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="post-spotify-button">Post Your Spotify Wrapped</button>
+            </form>
+        
+            <a href="{% url 'liked_posts' %}?filter_liked={% if filter_liked %}false{% else %}true{% endif %}" class="post-spotify-button" style="text-decoration: none;">
+                {% if filter_liked %}
+                    Show All Posts
+                {% else %}
+                    Show Liked Posts
+                {% endif %}
+            </a>
+        </div>
 
         <!-- Display Public Posts -->
         {% for post in public_wrapped_posts %}

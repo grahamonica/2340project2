@@ -176,29 +176,22 @@ def spotify_presentation(request):
         return render(request, 'home.html', {'user_taste': None})
 
 
-@login_required
 def spotify_social(request):
-    """
-    View for the "Spotify Social" page. Displays all public Spotify Wrapped posts.
-    """
-    # Fetch all public Spotify Wrapped posts
     public_wrapped_posts = SpotifyWrapped.objects.filter(is_public=True)
-    return render(request, 'spotify_social.html', {'public_wrapped_posts': public_wrapped_posts})
+    return render(request, 'spotify_social.html', {
+        'public_wrapped_posts': public_wrapped_posts,
+        'filter_liked': False  # Add this line
+    })
 
 @login_required
 def spotify_login(request):
-    """
-    Initiates Spotify login and authentication process.
-    """
     sp_oauth = SpotifyOAuth(
         client_id=settings.SPOTIPY_CLIENT_ID,
         client_secret=settings.SPOTIPY_CLIENT_SECRET,
         redirect_uri=settings.SPOTIPY_REDIRECT_URI,
         scope="user-top-read user-read-private user-read-email",
-        show_dialog=True,
+        show_dialog=True  # This forces the Spotify login prompt
     )
-
-    # Generate authorization URL
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
 
