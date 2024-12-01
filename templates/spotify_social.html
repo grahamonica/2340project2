@@ -16,6 +16,7 @@
             min-height: 100vh;
             text-align: center;
             transition: background-color 0.5s, color 0.5s;
+            padding-top: 60px; /* Added to prevent content from hiding under header */
         }
 
         /* Themes */
@@ -49,7 +50,7 @@
             gap: 10px;
         }
 
-        .theme-buttons button {
+        .theme-buttons button, .theme-buttons a button {
             padding: 8px 16px;
             border: none;
             border-radius: 20px;
@@ -61,15 +62,15 @@
             transition: transform 0.2s, box-shadow 0.3s;
         }
 
-        .theme-buttons button:hover {
+        .theme-buttons button:hover, .theme-buttons a button:hover {
             transform: scale(1.1);
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .content {
-            margin-top: 100px;
             width: 90%;
             max-width: 800px;
+            margin: 20px auto;
         }
 
         .wrapped-post {
@@ -82,12 +83,37 @@
         .like-section {
             margin-top: 20px;
         }
+
+        .duo-wrapped-section {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .duo-wrapped-btn {
+            background-color: #1db954;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+        }
+
+        .duo-wrapped-btn:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="dark-mode">
     <!-- Header -->
     <div class="header">
         <div class="theme-buttons">
+            <a href="{% url 'my_duo_wraps' %}" style="text-decoration: none;">
+                <button>My Duo Wraps</button>
+            </a>
             <button id="toggle-dark-light">Light/Dark Mode</button>
             <button id="toggle-christmas">Christmas Theme</button>
             <button id="toggle-halloween">Halloween Theme</button>
@@ -121,6 +147,13 @@
                 </button>
                 <span id="likes-count-{{ post.id }}">{{ post.liked_by.count }}</span> likes
             </div>
+            {% if user.is_authenticated and post.user != user %}
+            <div class="duo-wrapped-section">
+                <a href="{% url 'duo_wrapped' post.id %}" class="duo-wrapped-btn">
+                    Create Duo Wrapped
+                </a>
+            </div>
+            {% endif %}
         </div>
         {% empty %}
         <p>No public Spotify Wrapped presentations yet.</p>
@@ -141,6 +174,65 @@
 
         document.getElementById('toggle-halloween').addEventListener('click', () => {
             body.className = 'halloween-mode';
+        });
+    </script>
+
+    <!-- Add this to the bottom of spotify_social.html, just before the closing </body> tag -->
+<script>
+    function initializeSlideshow() {
+        const slideshows = document.querySelectorAll('.slideshow-container');
+        
+        slideshows.forEach(container => {
+            const slides = container.querySelectorAll('.slide');
+            const progressBar = container.querySelector('#progress-bar');
+            const prevButton = container.parentElement.querySelector('.prev-button');
+            const nextButton = container.parentElement.querySelector('.next-button');
+            let currentSlideIndex = 0;
+    
+            function showSlide(index) {
+                slides.forEach(slide => slide.style.display = 'none');
+                slides[index].style.display = 'block';
+                
+                // Update progress bar
+                const progress = ((index + 1) / slides.length) * 100;
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
+            }
+    
+            function nextSlide() {
+                currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+                showSlide(currentSlideIndex);
+            }
+    
+            function prevSlide() {
+                currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+                showSlide(currentSlideIndex);
+            }
+    
+            // Set up event listeners
+            if (nextButton) nextButton.addEventListener('click', nextSlide);
+            if (prevButton) prevButton.addEventListener('click', prevSlide);
+    
+            // Show first slide
+            showSlide(0);
+        });
+    }
+    
+    // Initialize all slideshows when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeSlideshow();
+    });
+    </script>
+    <script src="{% static 'js/slideshow.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all slideshows on the page
+            const slideshowContainers = document.querySelectorAll('.slideshow-container');
+            slideshowContainers.forEach(container => {
+                totalSlides = container.querySelectorAll('.slide').length;
+                showSlides();
+            });
         });
     </script>
 </body>

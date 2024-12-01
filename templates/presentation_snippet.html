@@ -1,0 +1,40 @@
+<div class="slideshow-container" id="slideshow-container">
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div class="slide cover-slide">
+        <h2>{{ user.username }}'s Spotify Wrapped</h2>
+    </div>
+
+    <div class="slide transition-slide">
+        <h2>This year, your top tracks were...</h2>
+    </div>
+
+    <div class="slide">
+        <h2>Your Top Tracks</h2>
+        <ul class="top-list">
+            {% for track in user_taste.top_tracks %}
+                <li class="line">{{ track.name }} - {{ track.artist }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="slide transition-slide">
+        <h2>Now, let's take a look at your top artists!</h2>
+    </div>
+
+    <div class="slide">
+        <h2>Your Top Artists</h2>
+        <ul class="top-list">
+            {% for artist in user_taste.top_artists %}
+                <li class="line">{{ artist.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="slideshow-navigation">
+    <button class="nav-button prev-button" onclick="changeSlide(-1)">Previous</button>
+    <button class="nav-button next-button" onclick="changeSlide(1)">Next</button>
+</div>

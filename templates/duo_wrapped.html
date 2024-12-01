@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Duo Wrapped</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .duo-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+        
+        .duo-column {
+            width: 45%;
+            text-align: center;
+        }
+        
+        .shared-section {
+            background-color: rgba(29, 185, 84, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="content">
+        <h2>Duo Wrapped: {{ user.username }} & {{ other_wrapped.user.username }}</h2>
+        
+        <div class="duo-container">
+            <div class="duo-column">
+                <h3>{{ user.username }}'s Top Artists</h3>
+                <ul>
+                    {% for artist in user_wrapped.top_artists %}
+                    <li>{{ artist.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="duo-column">
+                <h3>{{ other_wrapped.user.username }}'s Top Artists</h3>
+                <ul>
+                    {% for artist in other_wrapped.top_artists %}
+                    <li>{{ artist.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <div class="shared-section">
+            <h3>Shared Musical Tastes</h3>
+            
+            <div class="shared-artists">
+                <h4>Shared Artists</h4>
+                {% if shared_artists %}
+                <ul>
+                    {% for artist in shared_artists %}
+                    <li>{{ artist }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No shared artists found!</p>
+                {% endif %}
+            </div>
+            
+            <div class="shared-tracks">
+                <h4>Shared Tracks</h4>
+                {% if shared_tracks %}
+                <ul>
+                    {% for track in shared_tracks %}
+                    <li>{{ track }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No shared tracks found!</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="unique-tastes">
+            <h3>Unique Musical Tastes</h3>
+            
+            <div class="row">
+                <div class="duo-column">
+                    <h4>{{ user.username }}'s Unique Artists</h4>
+                    <ul>
+                        {% for artist in unique_user_artists %}
+                        <li>{{ artist }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="duo-column">
+                    <h4>{{ other_wrapped.user.username }}'s Unique Artists</h4>
+                    <ul>
+                        {% for artist in unique_other_artists %}
+                        <li>{{ artist }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

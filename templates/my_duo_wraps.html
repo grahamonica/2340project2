@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Duo Wraps</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            margin: 0;
+            padding-top: 60px;
+            background-color: #121212;
+            color: white;
+        }
+
+        .duo-wrap-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .duo-wrap-card {
+            background: rgba(29, 185, 84, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .comparison-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .user-column {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .duo-wrap-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1db954;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .no-duo-wraps {
+            text-align: center;
+            margin-top: 50px;
+            color: #888;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="header">
+        <div class="theme-buttons">
+            <a href="{% url 'spotify_social' %}" class="nav-button">Spotify Social</a>
+            <button id="toggle-dark-light">Light/Dark Mode</button>
+            <button id="toggle-christmas">Christmas Theme</button>
+            <button id="toggle-halloween">Halloween Theme</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <h2>My Duo Wraps</h2>
+
+        {% if duo_wraps %}
+        <div class="duo-wrap-container">
+            {% for duo_wrap in duo_wraps %}
+            <div class="duo-wrap-card">
+                <div class="duo-wrap-header">
+                    <h3>Duo Wrap with {{ duo_wrap.compared_user.username }}</h3>
+                    <p>Created on: {{ duo_wrap.created_at|date:"F d, Y" }}</p>
+                </div>
+
+                <div class="duo-wrap-card">
+                    <div class="duo-wrap-header">
+                        <h3>Duo Wrap with {{ duo_wrap.compared_user.username }}</h3>
+                        <p>Created on: {{ duo_wrap.created_at|date:"F d, Y" }}</p>
+                    </div>
+                
+                    <h4>Top Artists</h4>
+                    <div class="comparison-container">
+                        <div class="user-column">
+                            <h3>Your Artists</h3>
+                            <ul>
+                                {% for artist in duo_wrap.user_artists %}
+                                <li>{{ artist.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="user-column">
+                            <h3>{{ duo_wrap.compared_user.username }}'s Artists</h3>
+                            <ul>
+                                {% for artist in duo_wrap.compared_artists %}
+                                <li>{{ artist.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                
+                    <h4>Top Tracks</h4>
+                    <div class="comparison-container">
+                        <div class="user-column">
+                            <h3>Your Tracks</h3>
+                            <ul>
+                                {% for track in duo_wrap.user_tracks %}
+                                <li>{{ track.name }} - {{ track.artist }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="user-column">
+                            <h3>{{ duo_wrap.compared_user.username }}'s Tracks</h3>
+                            <ul>
+                                {% for track in duo_wrap.compared_tracks %}
+                                <li>{{ track.name }} - {{ track.artist }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-duo-wraps">
+            <p>You haven't created any Duo Wraps yet!</p>
+            <p>Visit Spotify Social to start comparing your music taste with friends.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'js/theme.js' %}"></script>
+</body>
+</html>

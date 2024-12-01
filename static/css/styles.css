@@ -457,3 +457,25 @@ body.halloween-mode {
 .delete-button:hover {
     background-color: darkred;
 }
+
+.slideshow-navigation {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.slideshow-navigation .nav-button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #1db954;
+    color: white;
+    border: none;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.slideshow-navigation .nav-button:hover {
+    transform: scale(1.05);
+}

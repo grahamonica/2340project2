@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class SpotifyWrapped(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     top_tracks = models.JSONField(null=True, blank=True)
     top_artists = models.JSONField(null=True, blank=True)
@@ -25,3 +26,16 @@ class SpotifyAuth(models.Model):
 
     def __str__(self):
         return f"Spotify Auth for {self.user.username}"
+
+class DuoWrap(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='duo_wraps')
+    compared_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='compared_duo_wraps')
+    user_artists = models.JSONField(default=list)
+    user_tracks = models.JSONField(default=list)
+    compared_artists = models.JSONField(default=list)
+    compared_tracks = models.JSONField(default=list)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'compared_user')
+        ordering = ['-created_at']

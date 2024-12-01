@@ -19,6 +19,7 @@ from sendgrid.helpers.mail import Mail
 from decouple import config
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from .models import DuoWrap
 
 @login_required
 def check_spotify_auth(request):
@@ -137,43 +138,42 @@ def liked_posts(request):
 def spotify_presentation(request):
     """
     Fetches and displays the user's Spotify data.
-    Saves the presentation in the SpotifyWrapped model.
     """
+    print(f"Accessing spotify_presentation for user: {request.user.username}")  # Debug print
+    
     try:
-        access_token = get_valid_spotify_token(request.user)
-        sp = Spotify(auth=access_token)
+        # Check if user has any wrapped presentations
+        wrapped = SpotifyWrapped.objects.filter(user=request.user).order_by('-created_at').first()
+        print(f"Found existing wrapped: {bool(wrapped)}")  # Debug print
+        if wrapped:
+            print(f"Wrapped data - tracks: {bool(wrapped.top_tracks)}, artists: {bool(wrapped.top_artists)}")  # Debug print
 
-        # Fetch top tracks and artists
-        top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
-        top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
-
-        # Generate user taste dictionary
-        user_taste = {
-            'top_tracks': [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks],
-            'top_artists': [{'name': artist['name']} for artist in top_artists],
-        }
-
-        # Use `home.html` for generating the presentation
-        presentation_html = render_to_string(
-            'home.html',  # Assuming this template exists and is suitable
-            {'user_taste': user_taste}
-        )
-
-        # Save or update the SpotifyWrapped instance for the user
-        SpotifyWrapped.objects.update_or_create(
-            user=request.user,
-            defaults={
-                'top_tracks': user_taste['top_tracks'],
-                'top_artists': user_taste['top_artists'],
-                'presentation': presentation_html,
-                'is_public': False,  # Default to private until explicitly posted
-            },
-        )
-    except Exception as e:
-        print(f"Error fetching Spotify data: {e}")
         user_taste = None
+        if wrapped and wrapped.top_tracks and wrapped.top_artists:
+            user_taste = {
+                'top_tracks': wrapped.top_tracks,
+                'top_artists': wrapped.top_artists
+            }
+            print("Using existing wrapped data")  # Debug print
+        else:
+            print("Attempting to fetch new data from Spotify")  # Debug print
+            access_token = get_valid_spotify_token(request.user)
+            sp = Spotify(auth=access_token)
 
-    return render(request, 'home.html', {'user_taste': user_taste})
+            top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
+            top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
+
+            user_taste = {
+                'top_tracks': [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks],
+                'top_artists': [{'name': artist['name']} for artist in top_artists],
+            }
+            print("Successfully fetched new data")  # Debug print
+
+        return render(request, 'home.html', {'user_taste': user_taste})
+
+    except Exception as e:
+        print(f"Error in spotify_presentation: {e}")  # Debug print
+        return render(request, 'home.html', {'user_taste': None})
 
 
 @login_required
@@ -212,40 +212,83 @@ def spotify_callback(request):
     """
     Handles Spotify's OAuth callback and saves the user's Spotify tokens.
     """
-    code = request.GET.get('code')
-
-    sp_oauth = SpotifyOAuth(
-        client_id=settings.SPOTIPY_CLIENT_ID,
-        client_secret=settings.SPOTIPY_CLIENT_SECRET,
-        redirect_uri=settings.SPOTIPY_REDIRECT_URI,
-        scope="user-top-read user-read-private user-read-email",
-    )
-
     try:
-        # Get access and refresh tokens
-        token_info = sp_oauth.get_access_token(code)
-        access_token = token_info['access_token']
-        refresh_token = token_info['refresh_token']
-        # Make expires_at timezone-aware
-        expires_at = make_aware(datetime.now() + timedelta(seconds=token_info['expires_in']))
+        print("Starting spotify_callback")  # Debug print
+        code = request.GET.get('code')
+        print(f"Got authorization code: {bool(code)}")  # Debug print
 
-        # Save tokens in the database
-        SpotifyAuth.objects.update_or_create(
-            user=request.user,
-            defaults={
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-                'expires_at': expires_at,
-                'scope': token_info.get('scope', ''),
-            },
+        sp_oauth = SpotifyOAuth(
+            client_id=settings.SPOTIPY_CLIENT_ID,
+            client_secret=settings.SPOTIPY_CLIENT_SECRET,
+            redirect_uri=settings.SPOTIPY_REDIRECT_URI,
+            scope="user-top-read user-read-private user-read-email",
         )
 
-        messages.success(request, "Spotify account linked successfully!")
+        try:
+            # Get access and refresh tokens
+            print("Getting access token")  # Debug print
+            token_info = sp_oauth.get_access_token(code)
+            access_token = token_info['access_token']
+            print("Successfully got access token")  # Debug print
+
+            # Save tokens in database
+            print("Saving tokens to database")  # Debug print
+            auth_obj, created = SpotifyAuth.objects.update_or_create(
+                user=request.user,
+                defaults={
+                    'access_token': access_token,
+                    'refresh_token': token_info['refresh_token'],
+                    'expires_at': make_aware(datetime.now() + timedelta(seconds=token_info['expires_in'])),
+                    'scope': token_info.get('scope', ''),
+                }
+            )
+            print(f"Tokens saved, auth object created: {created}")  # Debug print
+
+            # Initialize Spotify client
+            print("Initializing Spotify client")  # Debug print
+            sp = Spotify(auth=access_token)
+
+            # Fetch data
+            print("Fetching top tracks and artists")  # Debug print
+            top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
+            top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
+            print(f"Fetched {len(top_tracks)} tracks and {len(top_artists)} artists")  # Debug print
+
+            # Process data
+            user_taste = {
+                'top_tracks': [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks],
+                'top_artists': [{'name': artist['name']} for artist in top_artists],
+            }
+            print("Processed user taste data")  # Debug print
+
+            # Create presentation
+            print("Creating presentation HTML")  # Debug print
+            presentation_html = render_to_string(
+                'home.html',
+                {'user_taste': user_taste},
+                request=request
+            )
+
+            # Save wrapped
+            print("Saving Wrapped presentation")  # Debug print
+            wrapped = SpotifyWrapped.objects.create(
+                user=request.user,
+                top_tracks=user_taste['top_tracks'],
+                top_artists=user_taste['top_artists'],
+                presentation=presentation_html,
+                is_public=False
+            )
+            print(f"Successfully created Wrapped with ID: {wrapped.id}")  # Debug print
+
+            messages.success(request, "Spotify account linked successfully! Your Wrapped has been generated.")
+        except Exception as e:
+            print(f"Error during token exchange and data fetching: {e}")
+            raise
+
     except Exception as e:
         print(f"Error during Spotify callback: {e}")
         messages.error(request, "Failed to connect Spotify account.")
 
-    # Redirect to the home page or desired location
     return redirect('home')
 
 def signup(request):
@@ -316,11 +359,7 @@ def get_valid_spotify_token(user):
 
 @login_required
 def post_spotify_presentation(request):
-    """
-    Posts the user's Spotify Wrapped presentation to Spotify Social.
-    """
     try:
-        # Attempt to get a valid token without reauthorizing
         try:
             access_token = get_valid_spotify_token(request.user)
             sp = Spotify(auth=access_token)
@@ -334,18 +373,27 @@ def post_spotify_presentation(request):
                 'top_artists': [{'name': artist['name']} for artist in top_artists],
             }
 
-            # Convert the presentation into HTML format for storage
-            presentation_html = render_to_string(
-                'home.html',
-                {'user_taste': user_taste, 'is_posting': True},
+            # Create the slideshow HTML structure explicitly
+            slideshow_html = render_to_string(
+                'presentation_snippet.html',  # Create this new template
+                {
+                    'user_taste': user_taste,
+                    'user': request.user
+                },
                 request=request
             )
 
-            # Save the presentation to the database
-            SpotifyWrapped.objects.create(user=request.user, presentation=presentation_html, is_public=True)
+            # Save to database
+            SpotifyWrapped.objects.create(
+                user=request.user,
+                presentation=slideshow_html,
+                is_public=True,
+                top_tracks=user_taste['top_tracks'],
+                top_artists=user_taste['top_artists']
+            )
             messages.success(request, "Your Spotify Wrapped presentation has been posted!")
+            
         except ValueError:
-            # If no valid token is available, show an error
             messages.error(request, "Your Spotify session has expired. Please reconnect your account.")
             return redirect('spotify_login')
 
@@ -356,74 +404,42 @@ def post_spotify_presentation(request):
     return redirect('spotify_social')
 
 @login_required
-def delete_post(request, post_id):
-    """
-    Deletes a specific post created by the logged-in user.
-    """
-    try:
-        # Get the post associated with the logged-in user
-        post = get_object_or_404(SpotifyWrapped, id=post_id, user=request.user)
-
-        # Delete the post
-        post.delete()
-
-        # Display a success message and redirect
-        messages.success(request, "Your post has been deleted successfully!")
-    except Exception as e:
-        print(f"Error deleting post: {e}")
-        messages.error(request, "An error occurred while trying to delete the post.")
-
-    return redirect('account_info')
-
-from collections import Counter
-
-@login_required
 def duo_wrapped(request, post_id):
-    """
-    Generates a Duo Wrapped comparison between the logged-in user and another user's post.
-    """
     try:
-        # Get the logged-in user's Wrapped
-        user_wrapped = SpotifyWrapped.objects.get(user=request.user)
-        if not user_wrapped.top_artists or not user_wrapped.top_tracks:
-            messages.error(request, "Your Spotify Wrapped data is incomplete. Please regenerate your Wrapped.")
-            return redirect('spotify_social')
-
-        # Get the selected user's Wrapped post
+        # Get both users' wrapped data
+        user_wrapped = SpotifyWrapped.objects.filter(user=request.user).latest('created_at')
         other_wrapped = get_object_or_404(SpotifyWrapped, id=post_id)
-        if not other_wrapped.top_artists or not other_wrapped.top_tracks:
-            messages.error(request, "The selected user's Spotify Wrapped data is incomplete.")
-            return redirect('spotify_social')
+        
+        # Create or update DuoWrap with both users' data
+        duo_wrap, created = DuoWrap.objects.update_or_create(
+            user=request.user,
+            compared_user=other_wrapped.user,
+            defaults={
+                'user_artists': user_wrapped.top_artists,
+                'user_tracks': user_wrapped.top_tracks,
+                'compared_artists': other_wrapped.top_artists,
+                'compared_tracks': other_wrapped.top_tracks
+            }
+        )
 
-        # Extract data safely
-        user_artists = [artist.get('name') for artist in user_wrapped.top_artists]
-        other_artists = [artist.get('name') for artist in other_wrapped.top_artists]
+        return redirect('my_duo_wraps')
 
-        user_tracks = [track.get('name') for track in user_wrapped.top_tracks]
-        other_tracks = [track.get('name') for track in other_wrapped.top_tracks]
-
-        # Compare overlaps
-        shared_artists = set(user_artists) & set(other_artists)
-        shared_tracks = set(user_tracks) & set(other_tracks)
-
-        # Prepare data for the template
-        context = {
-            'user_wrapped': user_wrapped,
-            'other_wrapped': other_wrapped,
-            'shared_artists': shared_artists,
-            'shared_tracks': shared_tracks,
-            'unique_user_artists': set(user_artists) - shared_artists,
-            'unique_other_artists': set(other_artists) - shared_artists,
-            'unique_user_tracks': set(user_tracks) - shared_tracks,
-            'unique_other_tracks': set(other_tracks) - shared_tracks,
-        }
-
-        return render(request, 'duo_wrapped.html', context)
-
-    except SpotifyWrapped.DoesNotExist:
-        messages.error(request, "You must have a Spotify Wrapped to view a Duo Wrapped.")
-        return redirect('spotify_social')
     except Exception as e:
         print(f"Error in Duo Wrapped: {e}")
         messages.error(request, "An error occurred while generating Duo Wrapped.")
         return redirect('spotify_social')
+@login_required
+def my_duo_wraps(request):
+    print(f"Accessing my_duo_wraps for user: {request.user.username}")  # Debug print
+    duo_wraps = DuoWrap.objects.filter(user=request.user)
+    
+    # Update debug prints to use new field names
+    for wrap in duo_wraps:
+        print(f"Duo Wrap ID: {wrap.id}")
+        print(f"User artists: {wrap.user_artists}")
+        print(f"Compared artists: {wrap.compared_artists}")
+        print(f"User tracks: {wrap.user_tracks}")
+        print(f"Compared tracks: {wrap.compared_tracks}")
+        print("---")
+
+    return render(request, 'my_duo_wraps.html', {'duo_wraps': duo_wraps})

@@ -36,4 +36,6 @@ urlpatterns = [
     path('liked-posts/', views.liked_posts, name='liked_posts'),
     path('delete-post/<int:post_id>/', views.delete_post, name='delete_post'),
 
+    path('duo_wrapped/<int:post_id>/', views.duo_wrapped, name='duo_wrapped'),
+    path('my-duo-wraps/', views.my_duo_wraps, name='my_duo_wraps'),
 ]
