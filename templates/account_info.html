@@ -16,7 +16,7 @@
     .post-item {
         background: rgba(0, 0, 0, 0.05);
         padding: 20px;
-        margin-top: 20px;
+        margin-top: 350px;
         border-radius: 10px;
     }
     .post-item h3 {
@@ -34,37 +34,15 @@
     .delete-post-button:hover {
         background-color: #e60000;
     }
+    #slideshow-container.slideshow-container {
+        margin: 10px;
+    }
 </style>
 <body class="dark-mode">
     <!-- Light/Dark Mode Toggle Button -->
-    <div class="header">
-        <div class="nav-links">
-            <a href="{% url 'account_info' %}" class="nav-link">Account Info</a>
-            <a href="{% url 'spotify_social' %}" class="nav-link">Spotify Social</a>
-            <a href="{% url 'contact' %}" class="nav-link">Contact</a>
-            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
-            <a href="{% url 'home' %}" class="nav-link">Back to Home</a>
-        </div>
-        <div class="dropdown">
-            <button class="dropdown-toggle">Select Theme</button>
-            <div class="dropdown-menu">
-                <button id="toggle-dark-light">Light/Dark Mode</button>
-                <button id="toggle-christmas">Christmas Theme</button>
-                <button id="toggle-halloween">Halloween Theme</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="content">
-        <h2>Manage Your Account</h2>
-        <p>Deleting your account will remove all your posts and data permanently.</p>
-        
-        <!-- Delete Account Button -->
-        <form method="post" action="{% url 'delete_account' %}">
-            {% csrf_token %}
-            <button type="submit" class="delete-button">Delete My Account</button>
-        </form>
 
         <!-- User Posts Section -->
         <h2>Your Posts</h2>
@@ -84,6 +62,14 @@
         {% else %}
             <p>You have not made any posts yet.</p>
         {% endif %}
+        <h2>Manage Your Account</h2>
+        <p>Deleting your account will remove all your posts and data permanently.</p>
+
+        <!-- Delete Account Button -->
+        <form method="post" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+            <button type="submit" class="delete-button">Delete My Account</button>
+        </form>
     </div>
 
     <!-- JavaScript -->
