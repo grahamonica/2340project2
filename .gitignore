@@ -1,6 +1,6 @@
 db.sqlite3
 .cache
-
+__pycache__
 # Common files to ignore
 *.pyc
 **/__pycache__/
