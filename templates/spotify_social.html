@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Social</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <script>
@@ -41,9 +42,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
+            width: 60%;
             max-width: 600px; /* Optional: adjust based on your slideshow size */
-            height: auto; /* Keep the aspect ratio */
             margin: 0 auto;
         }
         .slideshow-container h2 {
@@ -117,31 +117,98 @@
         .like-section {
             margin-top: 20px;
         }
-        .wrapped-post {
+        .action-button {
+            display: inline-block;
+            text-decoration: none;
+            color: #ffffff;
+            background: rgb(158,43,103);
+            background: linear-gradient(90deg, rgba(158,43,103,1) 0%, rgba(205,47,129,1) 51%, rgba(158,43,103,1) 100%);
+            padding: 12px 24px;
+            border-radius: 30px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 40px; /* Adjusted for lower positioning */
+            padding-top: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                height: 55px;
+            }
+
+            .nav-links, .dropdown-toggle, .nav-link {
+                font-size: 12px;
+                gap: 2px;
+                width: 90%;
+                padding: 3px;
+            }
+            .dropdown-menu {
+                min-width: 80px;
+            }
+            .action-button {
+                display: inline-block;
+                text-decoration: none;
+                color: #ffffff;
+                background: rgb(158,43,103);
+                background: linear-gradient(90deg, rgba(158,43,103,1) 0%, rgba(205,47,129,1) 51%, rgba(158,43,103,1) 100%);
+                padding: 6px 12px;
+                background-color: transparent; /* Spotify green */
+                border-radius: 30px;
+                width: auto;
+                transition: background-color 0.3s, box-shadow 0.3s;
+                font-weight: bold;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 <body class="dark-mode">
     <!-- Header -->
+    <div class="header">
+        <div class="nav-links">
+            <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+            <a href="{% url 'account_info' %}" class="nav-link">Account</a> <!-- New link -->
+            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
 
+        </div>
+        <div class="dropdown">
+            <button class="dropdown-toggle">Themes</button>
+            <div class="dropdown-menu">
+                <button id="toggle-dark-light">Light/Dark Mode</button>
+                <button id="toggle-christmas">Christmas Theme</button>
+                <button id="toggle-halloween">Halloween Theme</button>
+            </div>
+        </div>
+    </div>
     <!-- Main Content -->
     <div class="content">
         <h2>Public Spotify Wrapped Presentations</h2>
 
         <!-- Post Spotify Wrapped Button -->
-        <form action="{% url 'post_spotify_presentation' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="post-spotify-button">Post Your Spotify Wrapped</button>
-        </form>
-        <a
-                href="{% url 'liked_posts' %}?filter_liked={% if not filter_liked %}true{% else %}false{% endif %}"
-                class="nav-button">
-            {% if filter_liked %}
-                Show All Posts
-            {% else %}
-                Filter Liked Posts
-            {% endif %}
-        </a>
+        <div class="button-container">
+            <form action="{% url 'post_spotify_presentation' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="action-button">Post Your Spotify Wrapped</button>
+            </form>
+            <a href="{% url 'liked_posts' %}?filter_liked={% if not filter_liked %}true{% else %}false{% endif %}"
+               class="action-button">
+                {% if filter_liked %}
+                    Show All Posts
+                {% else %}
+                    Filter Liked Posts
+                {% endif %}
+            </a>
+        </div>
+
 
 
         <!-- Display Public Posts -->

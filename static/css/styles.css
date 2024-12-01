@@ -51,8 +51,8 @@ body.halloween-mode .slideshow-container {
 
 body.halloween-mode {
     color: black;
-    background: rgb(9,10,10);
-    background: linear-gradient(90deg, rgba(9,10,10,1) 0%, rgba(30,40,43,1) 51%, rgba(9,10,10,1) 100%);
+    background: rgb(56,62,62);
+    background: linear-gradient(90deg, rgba(56,62,62,1) 0%, rgba(152,152,152,1) 51%, rgba(56,62,62,1) 100%);
 }
 
 
@@ -422,7 +422,7 @@ body.halloween-mode {
     }
 
     .action-button {
-        width: 90%;
+        width: auto;
         margin-top: 10px;
     }
 }
@@ -456,4 +456,79 @@ body.halloween-mode {
 
 .delete-button:hover {
     background-color: darkred;
+}
+.btn-twitter {
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin: 30px;
+    padding: 30px;
+    background-image: url("static/images/twitter.webp");
+    background-size: cover;
+    background-position: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-instagram {
+    display: inline-block;
+    width: 70px;
+    margin: 30px;
+    padding: 30px;
+    height: 70px;
+    background-image: url("static/images/insta.png");
+    background-size: cover;
+    background-position: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-instagram:hover, .btn-twitter:hover,
+.btn-facebook:hover, .btn-discord:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-instagram:active, .btn-twitter:active,
+.btn-facebook:active, .btn-discord:active{
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-facebook {
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin: 30px;
+    padding: 30px;
+    background-image: url("static/images/facebook.png");
+    background-size: cover;
+    background-position: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-discord {
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin: 30px;
+    padding: 30px;
+    background-image: url("static/images/discord.webp");
+    background-size: cover;
+    background-position: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
