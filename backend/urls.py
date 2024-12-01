@@ -11,6 +11,8 @@ urlpatterns = [
     # Home Pages
     path('', views.spotify_presentation, name='home'),  # Main home page with user data
     path('spotify-social/', views.spotify_social, name='spotify_social'),  # Social page for public Wrapped
+    path('post/', views.post_spotify_presentation, name='post_spotify_presentation'),
+
 
     # Contact and Misc
     path('contact/', views.contact, name='contact'),

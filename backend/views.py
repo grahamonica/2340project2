@@ -18,6 +18,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from decouple import config
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 @login_required
 def check_spotify_auth(request):
@@ -259,7 +260,7 @@ def get_valid_spotify_token(user):
     """
     try:
         spotify_auth = SpotifyAuth.objects.get(user=user)
-        if now() >= spotify_auth.expires_at:  # Use timezone-aware `now()` from Django
+        if now() >= spotify_auth.expires_at:
             # Token expired, refresh it
             sp_oauth = SpotifyOAuth(
                 client_id=settings.SPOTIPY_CLIENT_ID,
@@ -268,8 +269,92 @@ def get_valid_spotify_token(user):
             )
             token_info = sp_oauth.refresh_access_token(spotify_auth.refresh_token)
             spotify_auth.access_token = token_info['access_token']
-            spotify_auth.expires_at = now() + timedelta(seconds=token_info['expires_in'])  # Ensure timezone-awareness
+            spotify_auth.expires_at = now() + timedelta(seconds=token_info['expires_in'])
             spotify_auth.save()
         return spotify_auth.access_token
     except SpotifyAuth.DoesNotExist:
         raise ValueError("Spotify tokens not found. User needs to log in.")
+
+@login_required
+def post_spotify_presentation(request):
+    """
+    Posts the user's Spotify Wrapped presentation to Spotify Social.
+    """
+    try:
+        # Attempt to get a valid token without reauthorizing
+        try:
+            access_token = get_valid_spotify_token(request.user)
+            sp = Spotify(auth=access_token)
+
+            # Fetch top tracks and artists
+            top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
+            top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
+
+            user_taste = {
+                'top_tracks': [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks],
+                'top_artists': [{'name': artist['name']} for artist in top_artists],
+            }
+
+            # Convert the presentation into HTML format for storage
+            presentation_html = render_to_string(
+                'home.html',
+                {'user_taste': user_taste, 'is_posting': True},
+                request=request
+            )
+
+            # Save the presentation to the database
+            SpotifyWrapped.objects.create(user=request.user, presentation=presentation_html, is_public=True)
+            messages.success(request, "Your Spotify Wrapped presentation has been posted!")
+        except ValueError:
+            # If no valid token is available, show an error
+            messages.error(request, "Your Spotify session has expired. Please reconnect your account.")
+            return redirect('spotify_login')
+
+    except Exception as e:
+        print(f"Error posting Spotify Wrapped: {e}")
+        messages.error(request, "Failed to post Spotify Wrapped.")
+
+    return redirect('spotify_social')
+
+
+@login_required
+def spotify_presentation(request):
+    """
+    Fetches and displays the user's Spotify data.
+    Saves the presentation in the SpotifyWrapped model.
+    """
+    try:
+        access_token = get_valid_spotify_token(request.user)
+        sp = Spotify(auth=access_token)
+
+        # Fetch top tracks and artists
+        top_tracks = sp.current_user_top_tracks(limit=5, time_range='medium_term')['items']
+        top_artists = sp.current_user_top_artists(limit=5, time_range='medium_term')['items']
+
+        # Generate user taste dictionary
+        user_taste = {
+            'top_tracks': [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks],
+            'top_artists': [{'name': artist['name']} for artist in top_artists],
+        }
+
+        # Create the presentation (as HTML or formatted text)
+        presentation_html = render_to_string(
+            'presentation_template.html',  # A separate template for formatting
+            {'user_taste': user_taste}
+        )
+
+        # Save or update the SpotifyWrapped instance for the user
+        SpotifyWrapped.objects.update_or_create(
+            user=request.user,
+            defaults={
+                'top_tracks': user_taste['top_tracks'],
+                'top_artists': user_taste['top_artists'],
+                'presentation': presentation_html,
+                'is_public': False,  # Default to private until explicitly posted
+            },
+        )
+    except Exception as e:
+        print(f"Error fetching Spotify data: {e}")
+        user_taste = None
+
+    return render(request, 'home.html', {'user_taste': user_taste})
